@@ -1,17 +1,16 @@
 package com.pluralsight;
 import com.pluralsight.ui.Console;
+import com.pluralsight.data.DataManager;
 import com.pluralsight.models.Transactions;
-import java.time.LocalDate;
-import java.time.LocalTime;
+
+import java.util.ArrayList;
+
 
 public class Main {
     public static void main(String[] args){
         String option;
-        Transactions t = new Transactions(" ", " ");
-        LocalDate tester = t.getParseDate("2020-09-04");
-        LocalTime timeTester = t.getParseTime("23:01");
-        System.out.println(tester);
-        System.out.println(timeTester);
+        ArrayList<Transactions> transactions = DataManager.loadTransactions();
+        
         do {
             displayMainMenu();
             option = Console.promptForOptions("> ", "A","P","L","X");
