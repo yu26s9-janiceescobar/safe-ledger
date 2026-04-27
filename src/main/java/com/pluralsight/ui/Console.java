@@ -39,20 +39,16 @@ public class Console {
         }
         while(true);
     }
-    public static LocalDate promptForDate(String prompt){
-        do {
-            System.out.println(prompt);
-            try {
-                return LocalDate.parse(scanner.nextLine());
-            } catch (DateTimeParseException e) {
-                System.out.println("Invalid Input. Try Again.");
-            }
-        }while (true);
+    public static LocalDate parseDate(String dateInput){
+        try {
+            return LocalDate.parse(dateInput);
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid Input. Try Again.");
+        }
     }
 
-    public static LocalTime promptForTime(String prompt){
+    public static LocalTime parseTime(String timeInput){
         do {
-            System.out.println(prompt);
            try {
                return LocalTime.parse(scanner.nextLine());
            }
@@ -75,7 +71,7 @@ public class Console {
             try {
                 System.out.print(prompt);
                 parseInt = Integer.parseInt(scanner.nextLine());
-                if (parseInt > min && parseInt < max){
+                if (parseInt >= min && parseInt <= max){
                     return parseInt;
                 }
 

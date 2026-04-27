@@ -2,7 +2,7 @@ package com.pluralsight;
 import com.pluralsight.ui.Console;
 import com.pluralsight.data.DataManager;
 import com.pluralsight.models.Transactions;
-
+import com.pluralsight.ui.LedgerApp;
 import java.util.ArrayList;
 
 
@@ -12,11 +12,11 @@ public class Main {
     public static void main(String[] args){
         String option;
         do {
-            displayMainMenu();
+            LedgerApp.displayMainMenu();
             option = Console.promptForOptions("> ", "A","P","L","X");
             switch (option) {
                 case "A":
-                    //Add deposit method
+                    addTransaction();
                     break;
                 case "P":
                     // Make a payment
@@ -31,46 +31,13 @@ public class Main {
         }
         while(!option.equals("X"));
     }
-    private static void displayMainMenu(){
-        System.out.println("""
-                \t\tMain Menu
-                \t[A] Add Deposit
-                \t[P] Make a Payment
-                \t[L] Ledger
-                \t[X] Exit""");
-    }
-    private static void displayLedgerMenu() {
-        System.out.println("""
-                \t\tLedger Menu
-                \t[A] Display All Entries
-                \t[D] Display Deposits
-                \t[P] Display Payments
-                \t[R] Reports""");
-    }
-    private static void displayReportsMenu(){
-        System.out.println("""
-                \t\tReports Menu
-                \t[1] Month to Date
-                \t[2] Previous Month
-                \t[3] Year to Date
-                \t[4] Previous Year
-                \t[5] Search by Vendor
-                \t[0] Back to Ledger Menu""");
-    }
-    private static void addDeposit(){
-        int option = Console.promptForInt("""
-                Select an option:
-                [1] Custom Date and Time
-                [2] Current Date and Time""", 1, 2);
-        switch(option) {
-            case 1:
-                Console.promptForDate("Enter Date");
-                Console.promptForTime("Enter time");
-                break;
-            case 2:
-                //DataManager.addTransaction();
-                break;
-        }
+
+    private static void addTransaction (){
+        LedgerApp.dateTimePrompt();
+        String dateInput;
+        int option = Console.promptForInt("> ", 1, 2);
+        dateInput = Console.promptForString("Enter Date: ");
+        Console.parseDate(dateInput);
         String description = Console.promptForString("Description: ");
         String vendor = Console.promptForString("Vendor: ");
         double amount = Console.promptForDouble("Amount: ");
