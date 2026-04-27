@@ -1,11 +1,12 @@
 package com.pluralsight.ui;
 
-public class LedgerApp {
-    public static void dateTimePrompt(){
+public class LedgerView {
+
+    public static void customDateMenu(){
         System.out.println("""
-                \t\tSelect an option:
-                \t[1] Custom Date and Time
-                \t[2] Current Date and Time""");
+                    \t\tSelect an option:
+                    \t[1] Custom Date and Time
+                    \t[2] Current Date and Time""");
     }
     public static void displayMainMenu(){
         System.out.println("""

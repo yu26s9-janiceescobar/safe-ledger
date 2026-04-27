@@ -5,21 +5,24 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 public class Console {
     private final static Scanner scanner = new Scanner(System.in);
+
     public static String promptForString(String prompt){
         System.out.println(prompt);
-        return scanner.nextLine();
+        return scanner.nextLine().strip();
     }
+
     public static Double promptForDouble(String prompt){
         do {
             try {
                 System.out.println(prompt);
-                String userInput = scanner.nextLine();
+                String userInput = scanner.nextLine().strip();
                 return Double.parseDouble(userInput);
             } catch (Exception e) {
                 System.out.println("Invalid Input. Please Try again.");
             }
         }while(true);
     }
+
     /**
      * Prompts user for a menu option input.
      * @param prompt the message displayed to the user.
@@ -39,23 +42,29 @@ public class Console {
         }
         while(true);
     }
-    public static LocalDate parseDate(String dateInput){
-        try {
-            return LocalDate.parse(dateInput);
-        } catch (DateTimeParseException e) {
-            System.out.println("Invalid Input. Try Again.");
-        }
-    }
 
-    public static LocalTime parseTime(String timeInput){
-        do {
-           try {
-               return LocalTime.parse(scanner.nextLine());
-           }
-           catch(DateTimeParseException e){
-               System.out.println("Invalid Input. Try Again.");
-           }
-       }while(true);
+    public static LocalDate parseDateInput(String prompt){
+        do{
+            System.out.println(prompt);
+            try {
+                String userInput = scanner.nextLine().strip();
+                return LocalDate.parse(userInput);
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid Input. Try Again.");
+            }
+        }while(true);
+    }
+    public static LocalTime parseTimeInput(String prompt){
+        do{
+            System.out.println(prompt);
+            try {
+                String userInput = scanner.nextLine().strip() + ":00";
+                return LocalTime.parse(userInput);
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid Input. Try Again.");
+            }
+        }while(true);
+
     }
 
     /**
