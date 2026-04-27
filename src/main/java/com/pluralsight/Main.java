@@ -7,10 +7,10 @@ import java.util.ArrayList;
 
 
 public class Main {
+    private final ArrayList<Transactions> transactions = DataManager.loadTransactions();
+
     public static void main(String[] args){
         String option;
-        ArrayList<Transactions> transactions = DataManager.loadTransactions();
-        
         do {
             displayMainMenu();
             option = Console.promptForOptions("> ", "A","P","L","X");
@@ -57,7 +57,25 @@ public class Main {
                 \t[5] Search by Vendor
                 \t[0] Back to Ledger Menu""");
     }
-    //private static void addDeposit()
+    private static void addDeposit(){
+        int option = Console.promptForInt("""
+                Select an option:
+                [1] Custom Date and Time
+                [2] Current Date and Time""", 1, 2);
+        switch(option) {
+            case 1:
+                Console.promptForDate("Enter Date");
+                Console.promptForTime("Enter time");
+                break;
+            case 2:
+                //DataManager.addTransaction();
+                break;
+        }
+        String description = Console.promptForString("Description: ");
+        String vendor = Console.promptForString("Vendor: ");
+        double amount = Console.promptForDouble("Amount: ");
+
+    }
 
     //private static void makePayment()
 

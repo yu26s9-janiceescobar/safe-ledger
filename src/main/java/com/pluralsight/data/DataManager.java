@@ -1,5 +1,6 @@
 package com.pluralsight.data;
 import com.pluralsight.models.Transactions;
+import com.pluralsight.ui.Console;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -26,8 +27,8 @@ public class DataManager {
             String line;
             while((line = bufReader.readLine()) != null){
                 String[] singleTransaction = line.split("\\|");
-                LocalDate date = parseDate(singleTransaction[0]);
-                LocalTime time = parseTime(singleTransaction[1]);
+                LocalDate date = Console.parseDate(singleTransaction[0]);
+                LocalTime time = Console.parseTime(singleTransaction[1]);
                 String description = singleTransaction[2];
                 String vendor = singleTransaction[3];
                 double amount = Double.parseDouble(singleTransaction[4]);
@@ -41,10 +42,23 @@ public class DataManager {
         }
         return transactions;
     }
-    public static LocalDate parseDate(String date){
-        return LocalDate.parse(date);
+
+    public static void addTransaction(String date, String time, String description, String vendor, double amount){
+        try {
+            FileWriter fileWriter = new FileWriter(transactionFile, true);
+            BufferedWriter bufWriter = new BufferedWriter(fileWriter);
+            bufWriter.newLine();
+            String line = String.format("%s|%s|%s|%s|%.2f");
+            bufWriter.write(line);
+        }catch (IOException e){
+            System.out.println("Error: " + e.getMessage());
+        }
     }
-    public static LocalTime parseTime(String time){
-        return LocalTime.parse(time);
+    public static LocalDate currentDate(){
+        return LocalDate.now();
     }
+    public static LocalTime currentTime(){
+        return LocalTime.now();
+    }
+
 }

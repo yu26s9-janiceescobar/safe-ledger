@@ -1,8 +1,25 @@
 package com.pluralsight.ui;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 public class Console {
     private final static Scanner scanner = new Scanner(System.in);
-
+    public static String promptForString(String prompt){
+        System.out.println(prompt);
+        return scanner.nextLine();
+    }
+    public static Double promptForDouble(String prompt){
+        do {
+            try {
+                System.out.println(prompt);
+                String userInput = scanner.nextLine();
+                return Double.parseDouble(userInput);
+            } catch (Exception e) {
+                System.out.println("Invalid Input. Please Try again.");
+            }
+        }while(true);
+    }
     /**
      * Prompts user for a menu option input.
      * @param prompt the message displayed to the user.
@@ -21,6 +38,28 @@ public class Console {
             System.out.println("Invalid Input. Try Again.");
         }
         while(true);
+    }
+    public static LocalDate promptForDate(String prompt){
+        do {
+            System.out.println(prompt);
+            try {
+                return LocalDate.parse(scanner.nextLine());
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid Input. Try Again.");
+            }
+        }while (true);
+    }
+
+    public static LocalTime promptForTime(String prompt){
+        do {
+            System.out.println(prompt);
+           try {
+               return LocalTime.parse(scanner.nextLine());
+           }
+           catch(DateTimeParseException e){
+               System.out.println("Invalid Input. Try Again.");
+           }
+       }while(true);
     }
 
     /**
