@@ -1,8 +1,17 @@
 package com.pluralsight;
 import com.pluralsight.ui.Console;
+import com.pluralsight.models.Transactions;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class Main {
     public static void main(String[] args){
         String option;
+        Transactions t = new Transactions(" ", " ");
+        LocalDate tester = t.getParseDate("2020-09-04");
+        LocalTime timeTester = t.getParseTime("23:01");
+        System.out.println(tester);
+        System.out.println(timeTester);
         do {
             displayMainMenu();
             option = Console.promptForOptions("> ", "A","P","L","X");
