@@ -13,8 +13,8 @@ import java.io.IOException;
 public class DataManager {
     private static final String transactionFile = "data/transactions.csv";
 
-    public static ArrayList<String[]> loadTransactions(){
-        ArrayList<String[]> transactions= new ArrayList<>();
+    public static ArrayList<Transactions> loadTransactions(){
+        ArrayList<Transactions> transactions= new ArrayList<>();
         try {
             FileReader fileReader = new FileReader(transactionFile);
             BufferedReader bufReader = new BufferedReader(fileReader);
@@ -23,7 +23,14 @@ public class DataManager {
 
             String line;
             while((line = bufReader.readLine()) != null){
-                transactions.add(line.split("\\|"));
+                String[] t = line.split("\\|");
+                LocalDate date = LocalDate.parse(t[0]);
+                LocalTime time = LocalTime.parse(t[1]);
+                String description = t[2];
+                String vendor = t[3];
+                double amount = Double.parseDouble(t[4]);
+                Transactions transaction = new Transactions(date, time, description, vendor, amount);
+                transactions.add(transaction);
             }
             bufReader.close();
         }
@@ -33,9 +40,7 @@ public class DataManager {
         return transactions;
     }
 
-    public static void addTransaction(LocalDate date, LocalTime time, String description, String vendor, double amount){
-        Transactions transactions = new Transactions(date, time, description, vendor, amount);
-
+    public static void addTransaction(Transactions transactions){
         try {
             FileWriter fileWriter = new FileWriter(transactionFile, true);
             BufferedWriter bufWriter = new BufferedWriter(fileWriter);

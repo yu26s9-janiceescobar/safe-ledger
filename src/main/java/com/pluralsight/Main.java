@@ -8,7 +8,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Main {
-    private final ArrayList<String[]> transactions = DataManager.loadTransactions();
+    private final ArrayList<Transactions> transactions = DataManager.loadTransactions();
 
     public static void main(String[] args){
             String option;
@@ -49,8 +49,9 @@ public class Main {
         String description = Console.promptForString("Enter Description: ");
         String vendor = Console.promptForString("Enter vendor: ");
         double amount = Console.promptForDouble("Enter amount: ");
-
-        DataManager.addTransaction(date, time, description, vendor, amount);
+        
+        Transactions transactions = new Transactions(date, time, description, vendor, amount);
+        DataManager.addTransaction(transactions);
 
     }
 
