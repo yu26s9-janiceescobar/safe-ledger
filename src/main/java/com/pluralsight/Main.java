@@ -202,9 +202,8 @@ public class Main {
         transactionHeader();
         YearMonth priorMonth = YearMonth.now().minusMonths(1);
         for (Transactions t: transactions){
-            LocalDateTime transactionMonth = t.getDateTime().minusMonths(1);
-            YearMonth transactionPriorMonth = YearMonth.from(transactionMonth);
-            if (transactionPriorMonth.equals(priorMonth)){
+            YearMonth transactionMonth = YearMonth.from(t.getDateTime());
+            if (transactionMonth.equals(priorMonth)){
                 System.out.println(t);
             }
         }
