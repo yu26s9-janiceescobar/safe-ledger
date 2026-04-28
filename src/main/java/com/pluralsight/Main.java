@@ -4,6 +4,8 @@ import com.pluralsight.ui.Console;
 import com.pluralsight.data.DataManager;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -161,10 +163,10 @@ public class Main {
                     System.out.println("Loading Ledger Menu...");
                     break;
                 case 1:
-                    monthToDate();
+                    displayMonthToDate();
                     break;
                 case 3:
-                    //Previous Month
+                    displayPreviousMonth();
                     break;
                 case 4:
                     //Year to date
@@ -175,24 +177,29 @@ public class Main {
             }
         }while(option != 0);
     }
-    private static void monthToDate(){
-        System.out.println("Month to date");
-        int month = LocalDateTime.now().getMonthValue();
+    private static void displayMonthToDate(){
+        transactionHeader();
+        YearMonth currentYearMonth = YearMonth.from(LocalDateTime.now());
         for (Transactions t: transactions){
-            int transactionMonth = t.getDateTime().getMonthValue();
-            if (month == transactionMonth){
+            YearMonth transactionMonth = YearMonth.from(t.getDateTime());
+            if (currentYearMonth.equals(transactionMonth)){
                 System.out.println(t);
             }
         }
     }
+    private static void displayPreviousMonth(){
+        transactionHeader();
+    }
     private static void displayTransactions(ArrayList<Transactions> transactions){
-        System.out.printf("%-20s %-20s %-45s %-30s %s %n", "Date", "Time", "Description", "Vendor", "Amount");
-        System.out.println("-".repeat(140));
+        transactionHeader();
         for (Transactions t: transactions){
             System.out.println(t);
         }
     }
-
+    private static void transactionHeader(){
+        System.out.printf("%-20s %-20s %-45s %-30s %s %n", "Date", "Time", "Description", "Vendor", "Amount");
+        System.out.println("-".repeat(140));
+    }
 }
 
 
