@@ -37,6 +37,7 @@ public class Console {
 
                 if (parseDouble <= 0){
                     System.out.println("Error: Amount cannot be less than 0.01");
+                    continue;
                 }
                 else if(userInput.contains(".")){
                     String[] decimalPlaces = userInput.split("\\.");
