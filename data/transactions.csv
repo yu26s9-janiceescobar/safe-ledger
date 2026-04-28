@@ -51,13 +51,13 @@ date|time|description|vendor|amount
 2023-09-06|11:10:00|Payroll - assistant|Internal Payroll|-600.00
 2023-09-09|13:50:00|Retail order - serum|Amazon|95.00
 2023-09-12|15:10:00|Wholesale order - toner|SkinCare Distributors|-1200.00
-2023-09-15|10:30:00|Marketing ads|Google Ads|-180.00
-2023-09-18|12:40:00|Retail order - sunscreen|Shopify Store|39.99
-2023-09-22|14:50:00|Wholesale order - acne kits|DermSupply Co|1300.00
-2026-09-28|09:45:00|Invoice 3013 paid - spa order|Glow Beauty Spa|2100.00
-2023-10-03|10:05:00|Retail order - cleanser set|Amazon|55.00
-2023-10-06|11:25:00|Payroll - staff|Internal Payroll|-500.00
-2023-10-18|12:20:00|Utility bill|City Utilities|-210.00
+2025-09-15|10:30:00|Marketing ads|Google Ads|-180.00
+2025-09-18|12:40:00|Retail order - sunscreen|Shopify Store|39.99
+2025-09-22|14:50:00|Wholesale order - acne kits|DermSupply Co|1300.00
+2025-09-28|09:45:00|Invoice 3013 paid - spa order|Glow Beauty Spa|2100.00
+2025-10-03|10:05:00|Retail order - cleanser set|Amazon|55.00
+2025-10-06|11:25:00|Payroll - staff|Internal Payroll|-500.00
+2025-10-18|12:20:00|Utility bill|City Utilities|-210.00
 2026-10-22|14:05:00|Wholesale order - toner bulk|DermSupply Co|1200.00
 2026-03-28|10:40:00|Retail order - serum|Amazon|78.00
 2026-03-03|09:30:00|Invoice 3015 paid - spa supply|Luxe Skin Spa|1950.00
@@ -73,3 +73,4 @@ date|time|description|vendor|amount
 2026-04-28|09:32:45|asjf|sdaf|-900.00
 2026-04-28|11:20:20|Cash deposit|found|50.00
 2026-04-28|11:22:53|new|new|100.00
+2025-07-24|12:00:00|zelle|zelle|400.00

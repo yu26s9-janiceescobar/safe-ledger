@@ -2,10 +2,8 @@ package com.pluralsight;
 import com.pluralsight.models.Transactions;
 import com.pluralsight.ui.Console;
 import com.pluralsight.data.DataManager;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.Year;
-import java.time.YearMonth;
+
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -134,7 +132,7 @@ public class Main {
         LocalDateTime dateTime;
         int option = Console.promptForInt("> ", 1, 2);
         if (option == 1){
-            dateTime = Console.parseDateTime();
+            dateTime = Console.promptForDateTime();
         }
         else{
            dateTime = LocalDateTime.now();
@@ -173,12 +171,57 @@ public class Main {
                     displayYearToDate();
                     break;
                 case 4:
-                    //Search by vendor
+                    displayPriorYear();
+                    break;
+                case 5:
+                    searchByVendor();
+                    break;
+                case 6:
+                    //Custom search
                     break;
             }
         }while(option != 0);
     }
+    private static void customSearch(){
+        System.out.println("\t\tCustom Search Filter");
+        System.out.println("Press ENTER to skip field");
+        String dateString = Console.promptForString("Enter Start Date: ");
+        if (!dateString.isEmpty()){
+            LocalDate parseDate = Console.parseDate();
+        }
+        String timeString = Console.promptForString("Enter End Date: ");
+        if (!timeString.isEmpty()){
+            LocalTime parseTime = Console.parseTime();
+        }
+        String description = Console.promptForString("Enter Description: ");
+        String vendor = Console.promptForString("Enter Vendor: ");
+        Console.promptForString("Enter Amount: ");
+
+
+
+    }
+    /**
+     * Lets user search by vendor name.
+     */
+    private static void searchByVendor(){
+        System.out.println("\t\tSearch By Vendor:");
+        String vendor = Console.promptForString("Enter Vendor\n> ").toLowerCase();
+        boolean isFound = false;
+        for (Transactions t: transactions){
+            if (t.getVendor().toLowerCase().contains(vendor)){
+                System.out.println(t);
+                isFound = true;
+            }
+        }
+        if (!isFound){
+            System.out.println("No Matching Vendors.");
+        }
+    }
+    /**
+     * Displays Month to date transactions to user.
+     */
     private static void displayMonthToDate(){
+        System.out.printf("%70s", "Month to Date Report");
         transactionHeader();
         YearMonth currentYearMonth = YearMonth.now();
         for (Transactions t: transactions){
@@ -188,7 +231,12 @@ public class Main {
             }
         }
     }
+
+    /**
+     * Displays Year to date transactions to user.
+     */
     private static void displayYearToDate(){
+        System.out.printf("%70s %n", "Year to Date Report");
         transactionHeader();
         Year currentYear = Year.now();
         for (Transactions t: transactions){
@@ -198,7 +246,23 @@ public class Main {
             }
         }
     }
+    private static void displayPriorYear(){
+        System.out.printf("%70s %n", "Last Year Report");
+        transactionHeader();
+        Year priorYear = Year.now().minusYears(1);
+        for (Transactions t: transactions){
+            Year transactionYear = Year.from(t.getDateTime()); // Returns yyyy
+            if (priorYear.equals(transactionYear)){
+                System.out.println(t);
+            }
+        }
+    }
+
+    /**
+     * Displays previous month transactions to user.
+     */
     private static void displayPreviousMonth(){
+        System.out.printf("%70s", "Previous Month Report");
         transactionHeader();
         YearMonth priorMonth = YearMonth.now().minusMonths(1);
         for (Transactions t: transactions){
@@ -208,6 +272,7 @@ public class Main {
             }
         }
     }
+
     private static void displayTransactions(ArrayList<Transactions> transactions){
         transactionHeader();
         for (Transactions t: transactions){

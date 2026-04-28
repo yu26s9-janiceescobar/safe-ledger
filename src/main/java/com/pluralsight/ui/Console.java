@@ -37,7 +37,6 @@ public class Console {
 
                 if (parseDouble <= 0){
                     System.out.println("Error: Amount cannot be less than 0.01");
-                    continue;
                 }
                 else if(userInput.contains(".")){
                     String[] decimalPlaces = userInput.split("\\.");
@@ -74,11 +73,13 @@ public class Console {
     }
 
 
-    public static LocalDateTime parseDateTime(){
+    public static LocalDateTime promptForDateTime(){
         while(true) {
             LocalDateTime today = LocalDateTime.now();
-            LocalDate date = promptForDate("Enter Date: ");
-            LocalTime time = promptForTime("Enter Time: ");
+            System.out.print("Enter Date: ");
+            LocalDate date = parseDate();
+            System.out.println("Enter Time: ");
+            LocalTime time = parseTime();
             LocalDateTime dateTime = LocalDateTime.of(date, time);
             if (dateTime.isAfter(today)) {
                 System.out.println("Error: No Future time allowed.");
@@ -90,14 +91,12 @@ public class Console {
 
     /**
      * Prompts user to enter a valid date in YYYY-MM-DD format not exceeding today's date.
-     * @param prompt the message displayed to user.
      * @return LocalDate the date user enters.
      */
-    public static LocalDate promptForDate(String prompt){
+    public static LocalDate parseDate(){
         while(true){
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-M-d");
             LocalDate today = LocalDate.now();
-            System.out.print(prompt);
             try {
                 String userInput = scanner.nextLine().strip();
                 LocalDate parseDate = LocalDate.parse(userInput, fmt);
@@ -115,12 +114,10 @@ public class Console {
 
     /**
      * Prompts the user to enter a valid time in HH:MM format.
-     * @param prompt the message displayed to user.
      * @return LocalTime, the time user entered.
      */
-    public static LocalTime promptForTime(String prompt){
+    public static LocalTime parseTime(){
     while(true) {
-            System.out.print(prompt);
             try {
                 String userInput = scanner.nextLine().strip();
                 return LocalTime.parse(userInput);
