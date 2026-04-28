@@ -1,6 +1,7 @@
 package com.pluralsight.ui;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Period;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 public class Console {
@@ -10,13 +11,23 @@ public class Console {
         System.out.println(prompt);
         return scanner.nextLine().strip();
     }
-
-    public static Double promptForDouble(String prompt){
+    public static void exitApplication(){
+        System.out.println("Exiting Application...");
+    }
+    public static Double promptForCurrency(String prompt){
         do {
             try {
                 System.out.println(prompt);
                 String userInput = scanner.nextLine().strip();
-                return Double.parseDouble(userInput);
+                double parseDouble = Double.parseDouble(userInput);
+
+                if (parseDouble == 0){
+                    System.out.println("Dollar Amount cannot be 0.");
+                }
+                else{
+                    return parseDouble;
+                }
+
             } catch (Exception e) {
                 System.out.println("Invalid Input. Please Try again.");
             }
@@ -42,24 +53,39 @@ public class Console {
         }
         while(true);
     }
-
     public static LocalDate parseDateInput(String prompt){
         do{
+            LocalDate today = LocalDate.now();
             System.out.println(prompt);
             try {
                 String userInput = scanner.nextLine().strip();
-                return LocalDate.parse(userInput);
+                LocalDate parseDate = LocalDate.parse(userInput);
+                if (parseDate.isAfter(today)){
+                    System.out.println("Error: No future dates allowed.");
+                }
+                else{
+                    return parseDate;
+                }
             } catch (DateTimeParseException e) {
-                System.out.println("Invalid Input. Try Again.");
+                System.out.println("Error: Enter Valid Date.");
             }
         }while(true);
     }
-    public static LocalTime parseTimeInput(String prompt){
+    public static LocalTime parseTimeInput(String prompt, LocalDate date){
         do{
+            LocalDate today = LocalDate.now();
+            LocalTime currentTime = LocalTime.now();
             System.out.println(prompt);
             try {
                 String userInput = scanner.nextLine().strip() + ":00";
-                return LocalTime.parse(userInput);
+                LocalTime parseTime = LocalTime.parse(userInput);
+                if (date.isEqual(today) && parseTime.isAfter(currentTime)){
+                    System.out.println("Error: No Future time allowed.");
+                }
+                else{
+                    return parseTime;
+                }
+
             } catch (DateTimeParseException e) {
                 System.out.println("Invalid Input. Try Again.");
             }

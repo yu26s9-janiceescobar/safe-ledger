@@ -40,12 +40,13 @@ public class DataManager {
         return transactions;
     }
 
-    public static void addTransaction(Transactions transactions){
+    public static void addTransaction(LocalDate date, LocalTime time, String description, String vendor, double amount){
+        Transactions transactions = new Transactions(date, time, description, vendor, amount);
+
         try {
             FileWriter fileWriter = new FileWriter(transactionFile, true);
             BufferedWriter bufWriter = new BufferedWriter(fileWriter);
-            bufWriter.newLine();
-            String line = String.format("%s", transactions);
+            String line = String.format("%s|%s|%s|%s|%.2f", date, time, description, vendor, amount);
             bufWriter.write(line);
             bufWriter.close();
         }catch (IOException e){

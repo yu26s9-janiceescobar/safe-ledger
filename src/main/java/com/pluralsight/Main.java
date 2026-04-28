@@ -8,7 +8,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Main {
-    private final ArrayList<Transactions> transactions = DataManager.loadTransactions();
+    private final static ArrayList<Transactions> transactions = DataManager.loadTransactions();
 
     public static void main(String[] args){
             String option;
@@ -26,32 +26,31 @@ public class Main {
                         // Ledger Menu
                         break;
                     case "X":
-                        //Exit Menu
+                        Console.exitApplication();
                         break;
                 }
             }
             while(!option.equals("X"));
-
     }
+
     private static void addTransaction(){
         LedgerView.customDateMenu();
         LocalDate date;
         LocalTime time;
         int option = Console.promptForInt("> ", 1, 2);
         if (option == 1){
-            date = Console.parseDateInput("Enter Date of Transaction: ");
-            time = Console.parseTimeInput("Enter Time of Transaction: ");
+            date = Console.parseDateInput("Enter Date of Transaction(YYYY-MM-DD): ");
+            time = Console.parseTimeInput("Enter Time of Transaction(24:00): ", date);
         }
         else{
             date = LocalDate.now();
-            time = LocalTime.now();
+            time = LocalTime.now().withNano(0);
         }
         String description = Console.promptForString("Enter Description: ");
         String vendor = Console.promptForString("Enter vendor: ");
-        double amount = Console.promptForDouble("Enter amount: ");
-        
-        Transactions transactions = new Transactions(date, time, description, vendor, amount);
-        DataManager.addTransaction(transactions);
+        double amount = Console.promptForCurrency("Enter amount: ");
+
+        DataManager.addTransaction(date, time, description, vendor, amount);
 
     }
 
