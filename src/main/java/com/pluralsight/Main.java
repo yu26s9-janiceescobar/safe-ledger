@@ -20,6 +20,7 @@ public class Main {
                         break;
                     case "P":
                         handlePayment();
+                        break;
                     case "L":
                         handleLedger();
                         break;
@@ -35,16 +36,23 @@ public class Main {
         int option = Console.promptForInt("> ", 0, 5);
         switch(option){
             case 0:
-                //Month to date
+                System.out.println("Loading Main Menu...");
                 break;
             case 1:
-                //Previous Month
+                //Month to date
                 break;
             case 2:
-                //Year to date
+                // Previous Month
                 break;
-            case 3;
-                //
+            case 3:
+                // Year to date
+                break;
+            case 4:
+                //Previous Year
+                break;
+            case 5:
+                //Search by vendor
+                break;
         }
     }
     private static void handleDeposit(){
@@ -55,7 +63,7 @@ public class Main {
     private static void handlePayment(){
         LedgerView.paymentDisplay();
         double amount = Console.promptForCurrency("Enter Payment Amount:\n> ");
-        double payment = -amount;
+        double payment = -amount; // Converts amount to negative to indicate payment.
         addTransaction(payment);
     }
     private static void addTransaction(double amount){

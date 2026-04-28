@@ -14,7 +14,7 @@ public class Console {
      * @return String the user entered.
      */
     public static String promptForString(String prompt){
-        System.out.println(prompt);
+        System.out.print(prompt);
         return scanner.nextLine().strip();
     }
 
@@ -29,7 +29,7 @@ public class Console {
      */
 
     public static Double promptForCurrency(String prompt){
-        do {
+        while(true){
             try {
                 System.out.print(prompt);
                 String userInput = scanner.nextLine().strip();
@@ -49,7 +49,7 @@ public class Console {
             } catch (Exception e) {
                 System.out.println("Invalid Input. Please Try again.");
             }
-        }while(true);
+        }
     }
 
     /**
@@ -59,7 +59,7 @@ public class Console {
      * @return the String the user entered.
      */
     public static String promptForOptions(String prompt, String ...options){
-        do {
+        while(true){
             System.out.print(prompt);
             String userInput = scanner.nextLine().strip().toUpperCase();
             for (String option : options) {
@@ -69,33 +69,32 @@ public class Console {
             }
             System.out.println("Invalid Input. Try Again.");
         }
-        while(true);
+
     }
 
 
     public static LocalDateTime parseDateTime(){
-        LocalDateTime today = LocalDateTime.now();
-        do{
+        while(true) {
+            LocalDateTime today = LocalDateTime.now();
             LocalDate date = promptForDate("Enter Date: ");
             LocalTime time = promptForTime("Enter Time: ");
             LocalDateTime dateTime = LocalDateTime.of(date, time);
-            if (dateTime.isAfter(today)){
+            if (dateTime.isAfter(today)) {
                 System.out.println("Error: No Future time allowed.");
-            }
-            else{
+            } else {
                 return dateTime;
             }
-        }while(true);
-
+        }
     }
+
     /**
      * Prompts user to enter a valid date in YYYY-MM-DD format not exceeding today's date.
      * @param prompt the message displayed to user.
      * @return LocalDate the date user enters.
      */
     public static LocalDate promptForDate(String prompt){
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-M-d");
-        do{
+        while(true){
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-M-d");
             LocalDate today = LocalDate.now();
             System.out.print(prompt);
             try {
@@ -110,16 +109,16 @@ public class Console {
             } catch (DateTimeParseException e) {
                 System.out.println("Error: Enter Valid Date.");
             }
-        }while(true);
+        }
     }
 
     /**
-     * Prompts the user to enter a valid time in HH:MM format not exceeding the current date and time.
+     * Prompts the user to enter a valid time in HH:MM format.
      * @param prompt the message displayed to user.
      * @return LocalTime, the time user entered.
      */
     public static LocalTime promptForTime(String prompt){
-        do{
+    while(true) {
             System.out.print(prompt);
             try {
                 String userInput = scanner.nextLine().strip();
@@ -127,7 +126,7 @@ public class Console {
             } catch (DateTimeParseException e) {
                 System.out.println("Invalid Input. Try Again.");
             }
-        }while(true);
+        }
 
     }
 
@@ -140,7 +139,7 @@ public class Console {
      */
     public static int promptForInt(String prompt, int min, int max){
         int parseInt;
-        do{
+        while(true){
             try {
                 System.out.print(prompt);
                 parseInt = Integer.parseInt(scanner.nextLine().strip());
@@ -151,6 +150,6 @@ public class Console {
                 System.out.println("Invalid input. Please Try Again!");
             }
             System.out.println("Please enter an option between " + min + "-" + max);
-        }while(true);
+        }
     }
 }
