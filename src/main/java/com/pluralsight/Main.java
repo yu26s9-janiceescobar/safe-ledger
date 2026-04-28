@@ -13,17 +13,15 @@ public class Main {
 
     public static void main(String[] args){
             String option;
-            LedgerView.displayTransactions(transactions);
             do {
                 LedgerView.displayMainMenu();
                 option = Console.promptForOptions("> ", "A","P","L","X");
                 switch (option) {
                     case "A":
-                        addTransaction();
+                        handleDeposit();
                         break;
                     case "P":
-                        // Make a payment
-                        break;
+                        handlePayment();
                     case "L":
                         // Ledger Menu
                         break;
@@ -34,7 +32,17 @@ public class Main {
             }
             while(!option.equals("X"));
     }
-    private static void addTransaction(){
+    private static void handleDeposit(){
+        LedgerView.depositDisplay();
+        double amount = Console.promptForCurrency("Enter Deposit Amount: ");
+        addTransaction(amount);
+    }
+    private static void handlePayment(){
+        double amount = Console.promptForCurrency("Enter Payment Amount: ");
+        double payment = -amount;
+        addTransaction(payment);
+    }
+    private static void addTransaction(double amount){
         LedgerView.customDateMenu();
         LocalDateTime dateTime;
         int option = Console.promptForInt("> ", 1, 2);
@@ -46,7 +54,6 @@ public class Main {
         }
         String description = Console.promptForString("Enter Description: ");
         String vendor = Console.promptForString("Enter vendor: ");
-        double amount = Console.promptForCurrency("Enter amount: ");
 
         DataManager.addTransaction(dateTime, description, vendor, amount);
 

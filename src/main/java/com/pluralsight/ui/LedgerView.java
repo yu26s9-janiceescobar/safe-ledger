@@ -10,7 +10,9 @@ public class LedgerView {
            System.out.println(t);
         }
    }
-
+    public static void depositDisplay(){
+       System.out.println("\t\tDeposit Screen");
+    }
     public static void customDateMenu(){
         System.out.println("""
                     \t\tSelect an option:

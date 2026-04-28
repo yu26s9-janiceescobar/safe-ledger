@@ -30,6 +30,7 @@ public class Console {
      * @param prompt the message displayed to the user.
      * @return double returns the amount user entered.
      */
+
     public static Double promptForCurrency(String prompt){
         do {
             try {
@@ -37,8 +38,8 @@ public class Console {
                 String userInput = scanner.nextLine().strip();
                 double parseDouble = Double.parseDouble(userInput);
 
-                if (parseDouble == 0){
-                    System.out.println("Error: Amount cannot be 0.");
+                if (parseDouble <= 0){
+                    System.out.println("Error: Amount cannot be less than 0.01");
                 }
                 else if(userInput.contains(".")){
                     String[] decimalPlaces = userInput.split("\\.");
