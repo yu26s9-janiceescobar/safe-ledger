@@ -4,6 +4,7 @@ import com.pluralsight.ui.Console;
 import com.pluralsight.data.DataManager;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.Year;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -165,13 +166,13 @@ public class Main {
                 case 1:
                     displayMonthToDate();
                     break;
-                case 3:
+                case 2:
                     displayPreviousMonth();
                     break;
-                case 4:
-                    //Year to date
+                case 3:
+                    displayYearToDate();
                     break;
-                case 5:
+                case 4:
                     //Search by vendor
                     break;
             }
@@ -179,7 +180,7 @@ public class Main {
     }
     private static void displayMonthToDate(){
         transactionHeader();
-        YearMonth currentYearMonth = YearMonth.from(LocalDateTime.now());
+        YearMonth currentYearMonth = YearMonth.now();
         for (Transactions t: transactions){
             YearMonth transactionMonth = YearMonth.from(t.getDateTime());
             if (currentYearMonth.equals(transactionMonth)){
@@ -187,8 +188,26 @@ public class Main {
             }
         }
     }
+    private static void displayYearToDate(){
+        transactionHeader();
+        Year currentYear = Year.now();
+        for (Transactions t: transactions){
+            Year transactionYear = Year.from(t.getDateTime());
+            if (currentYear.equals(transactionYear)) {
+                System.out.println(t);
+            }
+        }
+    }
     private static void displayPreviousMonth(){
         transactionHeader();
+        YearMonth priorMonth = YearMonth.now().minusMonths(1);
+        for (Transactions t: transactions){
+            LocalDateTime transactionMonth = t.getDateTime().minusMonths(1);
+            YearMonth transactionPriorMonth = YearMonth.from(transactionMonth);
+            if (transactionPriorMonth.equals(priorMonth)){
+                System.out.println(t);
+            }
+        }
     }
     private static void displayTransactions(ArrayList<Transactions> transactions){
         transactionHeader();
