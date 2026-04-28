@@ -15,6 +15,7 @@ public class DataManager {
     private static final String transactionFile = "data/transactions.csv";
     private static final ArrayList<Transactions> transactions = new ArrayList<>();
 
+
     public static ArrayList<Transactions> loadTransactions(){
         try {
             FileReader fileReader = new FileReader(transactionFile);
@@ -44,7 +45,7 @@ public class DataManager {
 
     public static void addTransaction(LocalDateTime dateTime, String description, String vendor, double amount){
         Transactions t = new Transactions(dateTime, description, vendor, amount);
-        transactions.add(t);
+
         DateTimeFormatter dateFormat =  DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Takes the date part of the DateTime object
         DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss"); // Takes the time part of the DateTime object.
         try {
@@ -55,6 +56,7 @@ public class DataManager {
             bufWriter.newLine();
             bufWriter.write(line);
             bufWriter.close();
+            transactions.add(t);
         }catch (IOException e){
             System.out.println("Error: " + e.getMessage());
         }

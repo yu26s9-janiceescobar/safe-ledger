@@ -8,12 +8,6 @@ date|time|description|vendor|amount
 2023-01-22|12:00:00|Wholesale order - toner bulk|SkinCare Distributors|1100.00
 2023-01-25|15:40:00|Sales tax payment|State Tax Dept|-210.00
 2023-02-03|10:10:00|Retail order - exfoliating scrub|Shopify Store|67.25
-2023-02-06|11:45:00|Bulk sunscreen inventory|BeautyWarehouse Inc|-980.40
-2023-02-10|13:00:00|Invoice 3002 paid - spa restock|Luxe Skin Spa|1800.00
-2023-02-12|09:20:00|Payroll - assistant pay|Internal Payroll|-600.00
-2023-02-15|14:30:00|Retail order - cleanser set|Amazon|55.75
-2023-02-18|10:00:00|Marketing - Instagram ads|Meta Ads|-150.00
-2023-02-22|12:25:00|Wholesale order - facial kits|DermSupply Co|1250.00
 2023-02-26|15:10:00|Retail order - retinol cream|Shopify Store|78.30
 2023-03-02|09:05:00|Invoice 3003 paid - spa order|Glow Beauty Spa|2100.00
 2023-03-05|11:00:00|Payroll - consultant|Internal Payroll|-850.00
@@ -24,16 +18,6 @@ date|time|description|vendor|amount
 2023-03-22|09:50:00|Wholesale order - acne kits|SkinCare Distributors|-1350.00
 2023-03-28|15:20:00|Invoice 3004 paid - spa supply|Luxe Skin Spa|2400.00
 2023-04-03|10:00:00|Retail order - clay mask set|Amazon|62.00
-2023-04-06|11:30:00|Payroll - staff pay|Internal Payroll|-500.00
-2023-04-09|13:10:00|Wholesale order - toner bulk|DermSupply Co|1200.00
-2023-04-12|15:00:00|Retail order - cleanser|Shopify Store|45.20
-2023-04-15|09:00:00|Bulk skincare order|DermSupply Co|-1250.75
-2023-04-18|12:40:00|Invoice 3005 paid - spa order|Glow Beauty Spa|1750.00
-2023-04-21|14:10:00|Sales tax payment|State Tax Dept|-260.00
-2023-04-25|10:25:00|Retail order - vitamin C kit|Amazon|88.00
-2023-05-02|09:15:00|Wholesale order - sunscreen bulk|BeautyWarehouse Inc|990.50
-2023-05-05|11:45:00|Payroll - skincare specialist|Internal Payroll|-800.00
-2023-05-08|13:30:00|Retail order - glow kit|Shopify Store|88.00
 2023-05-12|10:10:00|Invoice 3006 paid - spa restock|Luxe Skin Spa|1950.00
 2023-05-15|12:50:00|Marketing ads|Google Ads|-180.00
 2023-05-18|14:20:00|Retail order - anti-aging serum|Amazon|95.00
@@ -101,3 +85,5 @@ date|time|description|vendor|amount
 2026-04-28|09:05:41|ewrfw|sga|-2000.00
 2026-04-28|09:30:26|karen|pwadef|0.01
 2026-04-28|09:32:45|asjf|sdaf|-900.00
+2026-04-28|11:20:20|Cash deposit|found|50.00
+2026-04-28|11:22:53|new|new|100.00

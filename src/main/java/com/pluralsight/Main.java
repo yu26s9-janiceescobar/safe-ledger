@@ -2,27 +2,34 @@ package com.pluralsight;
 import com.pluralsight.models.Transactions;
 import com.pluralsight.ui.Console;
 import com.pluralsight.data.DataManager;
-
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Main {
-    private final static ArrayList<Transactions> transactions = DataManager.loadTransactions();
+    private static final ArrayList<Transactions> transactions = DataManager.loadTransactions();
 
     public static void main(String[] args){
             String option;
             do {
-                displayMainMenu();
+                System.out.println("""
+                \t\tMain Menu
+                \t[A] Add Deposit
+                \t[P] Make a Payment
+                \t[L] Ledger
+                \t[X] Exit""");
+
                 option = Console.promptForOptions("> ", "A","P","L","X");
                 switch (option) {
                     case "A":
-                        handleDeposit();
+                        addDeposit();
                         break;
                     case "P":
-                        handlePayment();
+                        addPayment();
                         break;
                     case "L":
-                        handleLedger();
+                        ledgerMenu();
                         break;
                     case "X":
                         Console.exitApplication();
@@ -31,23 +38,29 @@ public class Main {
             }
             while(!option.equals("X"));
     }
-    private static void handleLedger() {
+    private static void ledgerMenu() {
         String option;
         do {
-            displayLedgerMenu();
+            System.out.println("""
+                \t\tLedger Menu
+                \t[A] Display All Entries
+                \t[D] Display Deposits
+                \t[P] Display Payments
+                \t[R] Reports
+                \t[H] Home Screen""");
             option = Console.promptForOptions("> ", "A", "D", "P", "R", "H");
             switch (option) {
                 case "A":
                     displayTransactions(transactions);
                     break;
                 case "D":
-                    handleDepositDisplay();
+                    displayDeposits();
                     break;
                 case "P":
-                    handlePaymentDisplay();
+                    displayPayments();
                     break;
                 case "R":
-                    handleReports();
+                    reportMenu();
                     break;
                 case "H":
                     System.out.println("Loading Home Screen...");
@@ -59,7 +72,7 @@ public class Main {
     /**
      * Displays all deposits to user.
      */
-    private static void handleDepositDisplay(){
+    private static void displayDeposits(){
         ArrayList<Transactions> deposits = new ArrayList<>();
         for (Transactions t: transactions){
             if (t.getAmount() > 0){
@@ -73,7 +86,7 @@ public class Main {
     /**
      * Displays all payments to user.
      */
-    private static void handlePaymentDisplay(){
+    private static void displayPayments(){
         ArrayList<Transactions> payments = new ArrayList<>();
         for (Transactions t: transactions){
             if (t.getAmount() < 0){
@@ -87,9 +100,8 @@ public class Main {
     /**
      * Allows user to make a deposit.
      */
-    private static void handleDeposit(){
+    private static void addDeposit(){
         System.out.println("\tDeposit Screen");
-
         double amount = Console.promptForCurrency("Enter Deposit Amount:\n> ");
         addTransaction(amount);
         System.out.println("You have successfully made a deposit.");
@@ -98,7 +110,7 @@ public class Main {
     /**
      * Allows user to make a payment.
      */
-    private static void handlePayment(){
+    private static void addPayment(){
         System.out.println("\tPayment Screen");
 
         double amount = Console.promptForCurrency("Enter Payment Amount:\n> ");
@@ -112,7 +124,10 @@ public class Main {
      * @param amount the deposit or payment amount.
      */
     private static void addTransaction(double amount){
-        customDateMenu();
+        System.out.println("""
+                    Enter an Option:
+                    \t[1] Custom Date and Time
+                    \t[2] Current Date and Time""");
         LocalDateTime dateTime;
         int option = Console.promptForInt("> ", 1, 2);
         if (option == 1){
@@ -128,17 +143,25 @@ public class Main {
 
     }
 
-    private static void handleReports(){
+    private static void reportMenu(){
         int option;
-        do {
-            displayReportsMenu();
+        do{
+            System.out.println("""
+                \t\tReports Menu
+                \t[1] Month to Date
+                \t[2] Previous Month
+                \t[3] Year to Date
+                \t[4] Previous Year
+                \t[5] Search by Vendor
+                \t[0] Back to Ledger Menu""");
+
             option = Console.promptForInt("> ", 0, 5);
             switch(option){
                 case 0:
                     System.out.println("Loading Ledger Menu...");
                     break;
                 case 1:
-                    //Month to date
+                    monthToDate();
                     break;
                 case 3:
                     //Previous Month
@@ -152,44 +175,24 @@ public class Main {
             }
         }while(option != 0);
     }
+    private static void monthToDate(){
+        System.out.println("Month to date");
+        int month = LocalDateTime.now().getMonthValue();
+        for (Transactions t: transactions){
+            int transactionMonth = t.getDateTime().getMonthValue();
+            if (month == transactionMonth){
+                System.out.println(t);
+            }
+        }
+    }
     private static void displayTransactions(ArrayList<Transactions> transactions){
         System.out.printf("%-20s %-20s %-45s %-30s %s %n", "Date", "Time", "Description", "Vendor", "Amount");
+        System.out.println("-".repeat(140));
         for (Transactions t: transactions){
             System.out.println(t);
         }
     }
-    private static void customDateMenu(){
-        System.out.println("""
-                    Enter an Option:
-                    \t[1] Custom Date and Time
-                    \t[2] Current Date and Time""");
-    }
-    private static void displayMainMenu(){
-        System.out.println("""
-                \t\tMain Menu
-                \t[A] Add Deposit
-                \t[P] Make a Payment
-                \t[L] Ledger
-                \t[X] Exit""");
-    }
-    private static void displayReportsMenu(){
-        System.out.println("""
-                \t\tReports Menu
-                \t[1] Month to Date
-                \t[2] Previous Month
-                \t[3] Year to Date
-                \t[4] Previous Year
-                \t[5] Search by Vendor
-                \t[0] Back to Ledger Menu""");
-    }
-    private static void displayLedgerMenu() {
-        System.out.println("""
-                \t\tLedger Menu
-                \t[A] Display All Entries
-                \t[D] Display Deposits
-                \t[P] Display Payments
-                \t[R] Reports""");
-    }
+
 }
 
 
