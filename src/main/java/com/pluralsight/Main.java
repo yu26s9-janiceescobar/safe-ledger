@@ -2,11 +2,8 @@ package com.pluralsight;
 import com.pluralsight.models.Transactions;
 import com.pluralsight.ui.Console;
 import com.pluralsight.data.DataManager;
-
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Main {
     private static final ArrayList<Transactions> transactions = DataManager.loadTransactions();
@@ -154,9 +151,10 @@ public class Main {
                 \t[3] Year to Date
                 \t[4] Previous Year
                 \t[5] Search by Vendor
+                \t[6] Custom Search
                 \t[0] Back to Ledger Menu""");
 
-            option = Console.promptForInt("> ", 0, 5);
+            option = Console.promptForInt("> ", 0, 6);
             switch(option){
                 case 0:
                     System.out.println("Loading Ledger Menu...");
@@ -177,7 +175,7 @@ public class Main {
                     searchByVendor();
                     break;
                 case 6:
-                    //Custom search
+                    customSearch();
                     break;
             }
         }while(option != 0);
@@ -185,20 +183,55 @@ public class Main {
     private static void customSearch(){
         System.out.println("\t\tCustom Search Filter");
         System.out.println("Press ENTER to skip field");
+        boolean hasFound = false;
+        LocalTime parseTime = null;
+        LocalDate parseDate = null;
+        double amount = 0;
         String dateString = Console.promptForString("Enter Start Date: ");
         if (!dateString.isEmpty()){
-            LocalDate parseDate = Console.parseDate();
+            parseDate = Console.parseDate(dateString);
         }
         String timeString = Console.promptForString("Enter End Date: ");
         if (!timeString.isEmpty()){
-            LocalTime parseTime = Console.parseTime();
+            parseTime = Console.parseTime(timeString);
         }
         String description = Console.promptForString("Enter Description: ");
         String vendor = Console.promptForString("Enter Vendor: ");
-        Console.promptForString("Enter Amount: ");
+        String currency = Console.promptForString("Enter Amount: ");
+        if (!currency.isEmpty()){
+            amount = Console.parseCurrency(currency);
+        }
+        for (Transactions t: transactions){
+            if (parseDate == null){
+                parseDate = t.getDate();
+            }
+            if (parseTime == null){
+                parseTime = t.getTime();
+            }
+            if (description.isEmpty()){
+                description = t.getDescription();
+            }
+            if (vendor.isEmpty()){
+                System.out.println("TESTING");
+                vendor = t.getVendor();
+            }
+            if (amount == 0){
+                amount = t.getAmount();
+            }
+            if (t.getDate().equals(parseDate)&&
+                    t.getTime().equals(parseTime)&&
+                    t.getDescription().toLowerCase().contains(description.toLowerCase()) &&
+                    t.getVendor().toLowerCase().contains(vendor.toLowerCase()) &&
+                    t.getAmount() == amount){
 
+            }
 
-
+            System.out.println(t);
+            hasFound = true;
+        }
+        if (!hasFound){
+            System.out.println("No Matches Found.");
+        }
     }
     /**
      * Lets user search by vendor name.

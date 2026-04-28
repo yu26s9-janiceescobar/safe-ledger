@@ -27,19 +27,21 @@ public class Console {
      * @param prompt the message displayed to the user.
      * @return double returns the amount user entered.
      */
-
     public static Double promptForCurrency(String prompt){
+        System.out.println(prompt);
+        String userInput = scanner.nextLine().strip();
+        return parseCurrency(userInput);
+    }
+    public static Double parseCurrency(String input){
         while(true){
             try {
-                System.out.print(prompt);
-                String userInput = scanner.nextLine().strip();
-                double parseDouble = Double.parseDouble(userInput);
+                double parseDouble = Double.parseDouble(input);
 
                 if (parseDouble <= 0){
                     System.out.println("Error: Amount cannot be less than 0.01");
                 }
-                else if(userInput.contains(".")){
-                    String[] decimalPlaces = userInput.split("\\.");
+                else if(input.contains(".")){
+                    String[] decimalPlaces = input.split("\\.");
                     if (decimalPlaces[1].length() > 2){
                         System.out.println("Error: Amount cannot have more than two decimal places.");
                         continue;
@@ -77,9 +79,11 @@ public class Console {
         while(true) {
             LocalDateTime today = LocalDateTime.now();
             System.out.print("Enter Date: ");
-            LocalDate date = parseDate();
+            String dateInput = scanner.nextLine().strip();
+            LocalDate date = parseDate(dateInput);
             System.out.println("Enter Time: ");
-            LocalTime time = parseTime();
+            String timeInput = scanner.nextLine().strip();
+            LocalTime time = parseTime(timeInput);
             LocalDateTime dateTime = LocalDateTime.of(date, time);
             if (dateTime.isAfter(today)) {
                 System.out.println("Error: No Future time allowed.");
@@ -93,13 +97,12 @@ public class Console {
      * Prompts user to enter a valid date in YYYY-MM-DD format not exceeding today's date.
      * @return LocalDate the date user enters.
      */
-    public static LocalDate parseDate(){
+    public static LocalDate parseDate(String input){
         while(true){
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-M-d");
             LocalDate today = LocalDate.now();
             try {
-                String userInput = scanner.nextLine().strip();
-                LocalDate parseDate = LocalDate.parse(userInput, fmt);
+                LocalDate parseDate = LocalDate.parse(input, fmt);
                 if (parseDate.isAfter(today)){
                     System.out.println("Error: No future dates allowed.");
                     continue;
@@ -116,11 +119,11 @@ public class Console {
      * Prompts the user to enter a valid time in HH:MM format.
      * @return LocalTime, the time user entered.
      */
-    public static LocalTime parseTime(){
+    public static LocalTime parseTime(String input){
     while(true) {
             try {
                 String userInput = scanner.nextLine().strip();
-                return LocalTime.parse(userInput);
+                return LocalTime.parse(input);
             } catch (DateTimeParseException e) {
                 System.out.println("Invalid Input. Try Again.");
             }
