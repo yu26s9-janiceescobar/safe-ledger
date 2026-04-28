@@ -27,7 +27,7 @@ public class DataManager {
                 String[] t = line.split("\\|");
                 LocalDate date = LocalDate.parse(t[0]);
                 LocalTime time = LocalTime.parse(t[1]);
-                LocalDateTime dateTime = LocalDateTime.of(date,time);
+                LocalDateTime dateTime = LocalDateTime.of(date,time); // Combines the date and time objects to create a DateTime object.
                 String description = t[2];
                 String vendor = t[3];
                 double amount = Double.parseDouble(t[4]);
@@ -45,8 +45,8 @@ public class DataManager {
     public static void addTransaction(LocalDateTime dateTime, String description, String vendor, double amount){
         Transactions t = new Transactions(dateTime, description, vendor, amount);
         transactions.add(t);
-        DateTimeFormatter dateFormat =  DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+        DateTimeFormatter dateFormat =  DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Takes the date part of the DateTime object
+        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss"); // Takes the time part of the DateTime object.
         try {
             String line;
             FileWriter fileWriter = new FileWriter(transactionFile, true);

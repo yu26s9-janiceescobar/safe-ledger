@@ -1,7 +1,4 @@
 package com.pluralsight.ui;
-import com.pluralsight.models.Transactions;
-
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -79,8 +76,8 @@ public class Console {
     public static LocalDateTime parseDateTime(){
         LocalDateTime today = LocalDateTime.now();
         do{
-            LocalDate date = parseDateInput("Enter Date: ");
-            LocalTime time = parseTimeInput("Enter Time: ");
+            LocalDate date = promptForDate("Enter Date: ");
+            LocalTime time = promptForTime("Enter Time: ");
             LocalDateTime dateTime = LocalDateTime.of(date, time);
             if (dateTime.isAfter(today)){
                 System.out.println("Error: No Future time allowed.");
@@ -96,11 +93,11 @@ public class Console {
      * @param prompt the message displayed to user.
      * @return LocalDate the date user enters.
      */
-    public static LocalDate parseDateInput(String prompt){
+    public static LocalDate promptForDate(String prompt){
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-M-d");
         do{
             LocalDate today = LocalDate.now();
-            System.out.println(prompt);
+            System.out.print(prompt);
             try {
                 String userInput = scanner.nextLine().strip();
                 LocalDate parseDate = LocalDate.parse(userInput, fmt);
@@ -121,9 +118,9 @@ public class Console {
      * @param prompt the message displayed to user.
      * @return LocalTime, the time user entered.
      */
-    public static LocalTime parseTimeInput(String prompt){
+    public static LocalTime promptForTime(String prompt){
         do{
-            System.out.println(prompt);
+            System.out.print(prompt);
             try {
                 String userInput = scanner.nextLine().strip();
                 return LocalTime.parse(userInput);

@@ -1,6 +1,5 @@
 package com.pluralsight.ui;
 import com.pluralsight.models.Transactions;
-
 import java.util.ArrayList;
 
 public class LedgerView {
@@ -11,11 +10,14 @@ public class LedgerView {
         }
    }
     public static void depositDisplay(){
-       System.out.println("\t\tDeposit Screen");
+       System.out.println("\tDeposit Screen");
+    }
+    public static void paymentDisplay(){
+       System.out.println("\tPayment Screen");
     }
     public static void customDateMenu(){
         System.out.println("""
-                    \t\tSelect an option:
+                    Enter an Option:
                     \t[1] Custom Date and Time
                     \t[2] Current Date and Time""");
     }

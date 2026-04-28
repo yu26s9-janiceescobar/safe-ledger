@@ -3,9 +3,7 @@ import com.pluralsight.models.Transactions;
 import com.pluralsight.ui.Console;
 import com.pluralsight.data.DataManager;
 import com.pluralsight.ui.LedgerView;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Main {
@@ -23,7 +21,7 @@ public class Main {
                     case "P":
                         handlePayment();
                     case "L":
-                        // Ledger Menu
+                        handleLedger();
                         break;
                     case "X":
                         Console.exitApplication();
@@ -32,13 +30,31 @@ public class Main {
             }
             while(!option.equals("X"));
     }
+    private static void handleLedger(){
+        LedgerView.displayLedgerMenu();
+        int option = Console.promptForInt("> ", 0, 5);
+        switch(option){
+            case 0:
+                //Month to date
+                break;
+            case 1:
+                //Previous Month
+                break;
+            case 2:
+                //Year to date
+                break;
+            case 3;
+                //
+        }
+    }
     private static void handleDeposit(){
         LedgerView.depositDisplay();
-        double amount = Console.promptForCurrency("Enter Deposit Amount: ");
+        double amount = Console.promptForCurrency("Enter Deposit Amount:\n> ");
         addTransaction(amount);
     }
     private static void handlePayment(){
-        double amount = Console.promptForCurrency("Enter Payment Amount: ");
+        LedgerView.paymentDisplay();
+        double amount = Console.promptForCurrency("Enter Payment Amount:\n> ");
         double payment = -amount;
         addTransaction(payment);
     }
@@ -52,16 +68,17 @@ public class Main {
         else{
            dateTime = LocalDateTime.now();
         }
-        String description = Console.promptForString("Enter Description: ");
-        String vendor = Console.promptForString("Enter vendor: ");
+        String description = Console.promptForString("Enter Description:\n> ");
+        String vendor = Console.promptForString("Enter vendor:\n> ");
 
         DataManager.addTransaction(dateTime, description, vendor, amount);
 
     }
 
+
 }
 
-    //private static void makePayment()
+
 
     //private static void  displayLedgerMenu()
 
