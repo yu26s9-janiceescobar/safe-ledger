@@ -17,7 +17,6 @@ public class Console {
         System.out.print(prompt);
         return scanner.nextLine().strip();
     }
-
     public static void exitApplication(){
         System.out.println("Exiting Application...");
     }
@@ -39,6 +38,9 @@ public class Console {
 
                 if (parseDouble <= 0){
                     System.out.println("Error: Amount cannot be less than 0.01");
+                }
+                if (parseDouble > 999999999.99){
+                    System.out.println("Error: Amount exceeds Maximum Allowed Value.");
                 }
                 else if(input.contains(".")){
                     String[] decimalPlaces = input.split("\\.");
@@ -69,7 +71,7 @@ public class Console {
                     return userInput;
                 }
             }
-            System.out.println("Invalid Input. Try Again.");
+            System.out.println("Invalid Input. Please Try Again.");
         }
 
     }
@@ -86,7 +88,7 @@ public class Console {
             LocalTime time = parseTime(timeInput);
             LocalDateTime dateTime = LocalDateTime.of(date, time);
             if (dateTime.isAfter(today)) {
-                System.out.println("Error: No Future time allowed.");
+                System.out.println("Error: No Future time allowed. Please Try Again.");
             } else {
                 return dateTime;
             }
@@ -104,13 +106,16 @@ public class Console {
             try {
                 LocalDate parseDate = LocalDate.parse(input, fmt);
                 if (parseDate.isAfter(today)){
-                    System.out.println("Error: No future dates allowed.");
+                    System.out.println("Error: No future dates allowed. Please Try Again.");
                     continue;
+                }
+                if (parseDate.isBefore(LocalDate.parse("1970-01-01"))){
+                    System.out.println("Error: Date cannot be older than 1970-01-01");
                 }
                 return parseDate;
 
             } catch (DateTimeParseException e) {
-                System.out.println("Error: Enter Valid Date.");
+                System.out.println("Error: Enter Valid Date. Please Try Again.");
             }
         }
     }
@@ -122,10 +127,9 @@ public class Console {
     public static LocalTime parseTime(String input){
     while(true) {
             try {
-                String userInput = scanner.nextLine().strip();
                 return LocalTime.parse(input);
             } catch (DateTimeParseException e) {
-                System.out.println("Invalid Input. Try Again.");
+                System.out.println("Invalid Input. Please Try Again.");
             }
         }
 

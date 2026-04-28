@@ -183,55 +183,62 @@ public class Main {
     private static void customSearch(){
         System.out.println("\t\tCustom Search Filter");
         System.out.println("Press ENTER to skip field");
-        boolean hasFound = false;
-        LocalTime parseTime = null;
-        LocalDate parseDate = null;
-        double amount = 0;
-        String dateString = Console.promptForString("Enter Start Date: ");
-        if (!dateString.isEmpty()){
-            parseDate = Console.parseDate(dateString);
+        LocalDate startDate;
+        LocalDate endDate;
+        double parseMin;
+        double parseMax;
+
+        String date = Console.promptForString("Enter Start Date: ");
+        if (!date.isBlank()) {
+            startDate = Console.parseDate(date);
         }
-        String timeString = Console.promptForString("Enter End Date: ");
-        if (!timeString.isEmpty()){
-            parseTime = Console.parseTime(timeString);
+        else{
+            startDate = LocalDate.parse("1970-01-01");
         }
-        String description = Console.promptForString("Enter Description: ");
+
+        String date2 = Console.promptForString("Enter End Date: ");
+        if (!date.isBlank()) {
+            endDate = Console.parseDate(date2);
+        }
+        else{
+            endDate = LocalDate.now();
+        }
+        String description = Console.promptForString("Enter Description: ").toLowerCase();
+
         String vendor = Console.promptForString("Enter Vendor: ");
-        String currency = Console.promptForString("Enter Amount: ");
-        if (!currency.isEmpty()){
-            amount = Console.parseCurrency(currency);
+
+        String minAmount = Console.promptForString("Enter Minimum Amount: ");
+        String maxAmount = Console.promptForString("Enter Maximum Amount: ");
+        if (!minAmount.isBlank()){
+            parseMin = Console.parseCurrency(minAmount);
         }
+        else{
+            parseMin = 0;
+        }
+        if (!maxAmount.isBlank()){
+            parseMax = Console.parseCurrency(maxAmount);
+        }
+        else{
+            parseMax = 99999999.99;
+        }
+
         for (Transactions t: transactions){
-            if (parseDate == null){
-                parseDate = t.getDate();
-            }
-            if (parseTime == null){
-                parseTime = t.getTime();
-            }
-            if (description.isEmpty()){
-                description = t.getDescription();
-            }
-            if (vendor.isEmpty()){
-                System.out.println("TESTING");
-                vendor = t.getVendor();
-            }
-            if (amount == 0){
-                amount = t.getAmount();
-            }
-            if (t.getDate().equals(parseDate)&&
-                    t.getTime().equals(parseTime)&&
-                    t.getDescription().toLowerCase().contains(description.toLowerCase()) &&
-                    t.getVendor().toLowerCase().contains(vendor.toLowerCase()) &&
-                    t.getAmount() == amount){
+            LocalDate transactionDate = t.getDate();
+            String transactionDescription = t.getDescription().toLowerCase();
+            String transactionVendor = t.getVendor().toLowerCase();
 
+            if (transactionDate.isAfter(startDate) &&
+            transactionDate.isBefore(endDate) &&
+                    transactionDescription.contains(description) &&
+            transactionVendor.contains(vendor) &&
+             t.getAmount() >= parseMin &&
+            t.getAmount() <= parseMax){
+                System.out.println(t);
             }
+        }
 
-            System.out.println(t);
-            hasFound = true;
-        }
-        if (!hasFound){
-            System.out.println("No Matches Found.");
-        }
+
+
     }
     /**
      * Lets user search by vendor name.
