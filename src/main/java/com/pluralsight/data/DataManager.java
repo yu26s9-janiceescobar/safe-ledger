@@ -12,9 +12,9 @@ import java.io.IOException;
 
 public class DataManager {
     private static final String transactionFile = "data/transactions.csv";
+    private static final ArrayList<Transactions> transactions = new ArrayList<>();
 
     public static ArrayList<Transactions> loadTransactions(){
-        ArrayList<Transactions> transactions= new ArrayList<>();
         try {
             FileReader fileReader = new FileReader(transactionFile);
             BufferedReader bufReader = new BufferedReader(fileReader);
@@ -41,8 +41,8 @@ public class DataManager {
     }
 
     public static void addTransaction(LocalDate date, LocalTime time, String description, String vendor, double amount){
-        Transactions transactions = new Transactions(date, time, description, vendor, amount);
-
+        Transactions t = new Transactions(date, time, description, vendor, amount);
+        transactions.add(t);
         try {
             FileWriter fileWriter = new FileWriter(transactionFile, true);
             BufferedWriter bufWriter = new BufferedWriter(fileWriter);

@@ -18,6 +18,7 @@ public class Main {
                 switch (option) {
                     case "A":
                         addTransaction();
+                        LedgerView.displayAllTransactions(transactions);
                         break;
                     case "P":
                         // Make a payment
@@ -32,7 +33,6 @@ public class Main {
             }
             while(!option.equals("X"));
     }
-
     private static void addTransaction(){
         LedgerView.customDateMenu();
         LocalDate date;

@@ -1,7 +1,13 @@
 package com.pluralsight.ui;
+import com.pluralsight.models.Transactions;
+import java.util.ArrayList;
 
 public class LedgerView {
-
+    public static void displayAllTransactions(ArrayList<Transactions> transaction){
+        for (Transactions t: transaction){
+            System.out.println(t);
+        }
+    }
     public static void customDateMenu(){
         System.out.println("""
                     \t\tSelect an option:

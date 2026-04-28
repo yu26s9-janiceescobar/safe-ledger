@@ -1,4 +1,7 @@
 package com.pluralsight.ui;
+import com.pluralsight.models.Transactions;
+
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Period;
@@ -14,6 +17,7 @@ public class Console {
     public static void exitApplication(){
         System.out.println("Exiting Application...");
     }
+
     public static Double promptForCurrency(String prompt){
         do {
             try {
