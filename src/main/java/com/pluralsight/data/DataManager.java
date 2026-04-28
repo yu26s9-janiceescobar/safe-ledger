@@ -1,8 +1,8 @@
 package com.pluralsight.data;
 import com.pluralsight.models.Transactions;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
@@ -44,9 +44,11 @@ public class DataManager {
         Transactions t = new Transactions(date, time, description, vendor, amount);
         transactions.add(t);
         try {
+            String line;
             FileWriter fileWriter = new FileWriter(transactionFile, true);
             BufferedWriter bufWriter = new BufferedWriter(fileWriter);
-            String line = String.format("%s|%s|%s|%s|%.2f", date, time, description, vendor, amount);
+            line = String.format("%s|%s|%s|%s|%.2f", date, t.getTime(), description, vendor, amount);
+            bufWriter.newLine();
             bufWriter.write(line);
             bufWriter.close();
         }catch (IOException e){

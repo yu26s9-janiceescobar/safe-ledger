@@ -4,34 +4,48 @@ import com.pluralsight.models.Transactions;
 import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Period;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 public class Console {
     private final static Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Prompts user to enter a string.
+     * @param prompt the message displayed to the user.
+     * @return String the user entered.
+     */
     public static String promptForString(String prompt){
         System.out.println(prompt);
         return scanner.nextLine().strip();
     }
+
     public static void exitApplication(){
         System.out.println("Exiting Application...");
     }
 
+    /**
+     * Prompts the user to enter a dollar amount.
+     * @param prompt the message displayed to the user.
+     * @return double returns the amount user entered.
+     */
     public static Double promptForCurrency(String prompt){
         do {
             try {
-                System.out.println(prompt);
+                System.out.print(prompt);
                 String userInput = scanner.nextLine().strip();
                 double parseDouble = Double.parseDouble(userInput);
 
                 if (parseDouble == 0){
-                    System.out.println("Dollar Amount cannot be 0.");
+                    System.out.println("Error: Amount cannot be 0.");
                 }
-                else{
-                    return parseDouble;
+                else if(userInput.contains(".")){
+                    String[] decimalPlaces = userInput.split("\\.");
+                    if (decimalPlaces[1].length() > 2){
+                        System.out.println("Error: Amount cannot have more than two decimal places.");
+                        continue;
+                    }
                 }
-
+                return parseDouble;
             } catch (Exception e) {
                 System.out.println("Invalid Input. Please Try again.");
             }
@@ -47,9 +61,9 @@ public class Console {
     public static String promptForOptions(String prompt, String ...options){
         do {
             System.out.print(prompt);
-            String userInput = scanner.nextLine().toUpperCase();
+            String userInput = scanner.nextLine().strip().toUpperCase();
             for (String option : options) {
-                if (userInput.equalsIgnoreCase(option)) {
+                if (userInput.equals(option)) {
                     return userInput;
                 }
             }
@@ -57,6 +71,12 @@ public class Console {
         }
         while(true);
     }
+
+    /**
+     * Prompts user to enter a valid date in YYYY-MM-DD format not exceeding today's date.
+     * @param prompt the message displayed to user.
+     * @return LocalDate the date user enters.
+     */
     public static LocalDate parseDateInput(String prompt){
         do{
             LocalDate today = LocalDate.now();
@@ -66,29 +86,37 @@ public class Console {
                 LocalDate parseDate = LocalDate.parse(userInput);
                 if (parseDate.isAfter(today)){
                     System.out.println("Error: No future dates allowed.");
+                    continue;
                 }
-                else{
-                    return parseDate;
-                }
+
+                return parseDate;
+
             } catch (DateTimeParseException e) {
                 System.out.println("Error: Enter Valid Date.");
             }
         }while(true);
     }
+
+    /**
+     * Prompts the user to enter a valid time in HH:MM format not exceeding the current date and time.
+     * @param prompt the message displayed to user.
+     * @param date the date the user entered.
+     * @return LocalTime, the time user entered.
+     */
     public static LocalTime parseTimeInput(String prompt, LocalDate date){
         do{
             LocalDate today = LocalDate.now();
             LocalTime currentTime = LocalTime.now();
             System.out.println(prompt);
             try {
-                String userInput = scanner.nextLine().strip() + ":00";
+                String userInput = scanner.nextLine().strip();
                 LocalTime parseTime = LocalTime.parse(userInput);
                 if (date.isEqual(today) && parseTime.isAfter(currentTime)){
                     System.out.println("Error: No Future time allowed.");
+                    continue;
                 }
-                else{
-                    return parseTime;
-                }
+
+                return parseTime;
 
             } catch (DateTimeParseException e) {
                 System.out.println("Invalid Input. Try Again.");
@@ -109,11 +137,10 @@ public class Console {
         do{
             try {
                 System.out.print(prompt);
-                parseInt = Integer.parseInt(scanner.nextLine());
+                parseInt = Integer.parseInt(scanner.nextLine().strip());
                 if (parseInt >= min && parseInt <= max){
                     return parseInt;
                 }
-
             }catch(Exception e){
                 System.out.println("Invalid input. Please Try Again!");
             }

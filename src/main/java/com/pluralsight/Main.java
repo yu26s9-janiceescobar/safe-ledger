@@ -12,13 +12,14 @@ public class Main {
 
     public static void main(String[] args){
             String option;
+            LedgerView.displayTransactions(transactions);
             do {
                 LedgerView.displayMainMenu();
                 option = Console.promptForOptions("> ", "A","P","L","X");
                 switch (option) {
                     case "A":
                         addTransaction();
-                        LedgerView.displayAllTransactions(transactions);
+
                         break;
                     case "P":
                         // Make a payment

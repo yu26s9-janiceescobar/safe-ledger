@@ -1,24 +1,26 @@
 package com.pluralsight.models;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class Transactions {
     private LocalDate date;
     private LocalTime time;
     private String description;
     private String vendor;
-    private long pennyAmount;
+    private double amount;
 
     public Transactions(LocalDate date, LocalTime time, String description, String vendor, double amount){
         this.date = date;
         this.time = time;
         this.description = description;
         this.vendor = vendor;
-        this.pennyAmount = (long)(amount*100);
+        this.amount = amount;
 
     }
-    public double getDollarAmount(){
-        return pennyAmount * 100.0;
+
+    public double getAmount(){
+        return amount;
     }
 
     public LocalDate getDate(){
@@ -41,7 +43,7 @@ public class Transactions {
 
     @Override
     public String toString(){
-      return String.format("%s, %s, %s, %s, %.2f ", date, time, description, vendor, getDollarAmount());
-       }
-
+        DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm:ss");
+        return String.format("%-20s %-20s %-45s %-30s $%.2f", date, time.format(timeFmt), description, vendor, amount);
+    }
 }
