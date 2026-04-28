@@ -3,7 +3,9 @@ import com.pluralsight.models.Transactions;
 
 import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 public class Console {
@@ -72,23 +74,39 @@ public class Console {
         while(true);
     }
 
+
+    public static LocalDateTime parseDateTime(){
+        LocalDateTime today = LocalDateTime.now();
+        do{
+            LocalDate date = parseDateInput("Enter Date: ");
+            LocalTime time = parseTimeInput("Enter Time: ");
+            LocalDateTime dateTime = LocalDateTime.of(date, time);
+            if (dateTime.isAfter(today)){
+                System.out.println("Error: No Future time allowed.");
+            }
+            else{
+                return dateTime;
+            }
+        }while(true);
+
+    }
     /**
      * Prompts user to enter a valid date in YYYY-MM-DD format not exceeding today's date.
      * @param prompt the message displayed to user.
      * @return LocalDate the date user enters.
      */
     public static LocalDate parseDateInput(String prompt){
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-M-d");
         do{
             LocalDate today = LocalDate.now();
             System.out.println(prompt);
             try {
                 String userInput = scanner.nextLine().strip();
-                LocalDate parseDate = LocalDate.parse(userInput);
+                LocalDate parseDate = LocalDate.parse(userInput, fmt);
                 if (parseDate.isAfter(today)){
                     System.out.println("Error: No future dates allowed.");
                     continue;
                 }
-
                 return parseDate;
 
             } catch (DateTimeParseException e) {
@@ -100,24 +118,14 @@ public class Console {
     /**
      * Prompts the user to enter a valid time in HH:MM format not exceeding the current date and time.
      * @param prompt the message displayed to user.
-     * @param date the date the user entered.
      * @return LocalTime, the time user entered.
      */
-    public static LocalTime parseTimeInput(String prompt, LocalDate date){
+    public static LocalTime parseTimeInput(String prompt){
         do{
-            LocalDate today = LocalDate.now();
-            LocalTime currentTime = LocalTime.now();
             System.out.println(prompt);
             try {
                 String userInput = scanner.nextLine().strip();
-                LocalTime parseTime = LocalTime.parse(userInput);
-                if (date.isEqual(today) && parseTime.isAfter(currentTime)){
-                    System.out.println("Error: No Future time allowed.");
-                    continue;
-                }
-
-                return parseTime;
-
+                return LocalTime.parse(userInput);
             } catch (DateTimeParseException e) {
                 System.out.println("Invalid Input. Try Again.");
             }

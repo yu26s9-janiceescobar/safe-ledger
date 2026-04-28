@@ -4,6 +4,7 @@ import com.pluralsight.ui.Console;
 import com.pluralsight.data.DataManager;
 import com.pluralsight.ui.LedgerView;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -19,7 +20,6 @@ public class Main {
                 switch (option) {
                     case "A":
                         addTransaction();
-
                         break;
                     case "P":
                         // Make a payment
@@ -36,22 +36,19 @@ public class Main {
     }
     private static void addTransaction(){
         LedgerView.customDateMenu();
-        LocalDate date;
-        LocalTime time;
+        LocalDateTime dateTime;
         int option = Console.promptForInt("> ", 1, 2);
         if (option == 1){
-            date = Console.parseDateInput("Enter Date of Transaction(YYYY-MM-DD): ");
-            time = Console.parseTimeInput("Enter Time of Transaction(24:00): ", date);
+            dateTime = Console.parseDateTime();
         }
         else{
-            date = LocalDate.now();
-            time = LocalTime.now().withNano(0);
+           dateTime = LocalDateTime.now();
         }
         String description = Console.promptForString("Enter Description: ");
         String vendor = Console.promptForString("Enter vendor: ");
         double amount = Console.promptForCurrency("Enter amount: ");
 
-        DataManager.addTransaction(date, time, description, vendor, amount);
+        DataManager.addTransaction(dateTime, description, vendor, amount);
 
     }
 
