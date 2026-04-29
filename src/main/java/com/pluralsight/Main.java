@@ -100,8 +100,13 @@ public class Main {
      */
     private static void addDeposit(){
         System.out.println("\tDeposit Screen");
-        double amount = Console.promptForCurrency("Enter Deposit Amount:\n> ");
-        addTransaction(amount);
+        String amount;
+        do{
+            amount = Console.promptForString("Enter Deposit Amount: ");
+        }while(!Console.isValidCurrency(amount) && !amount.isBlank());
+
+        addTransaction(Double.parseDouble(amount));
+
         System.out.println("You have successfully made a deposit.");
     }
 
@@ -110,10 +115,13 @@ public class Main {
      */
     private static void addPayment(){
         System.out.println("\tPayment Screen");
+        String amount;
+        do {
+            amount = Console.promptForString("Enter Payment Amount: ");
+        }while(!Console.isValidCurrency(amount) && !amount.isBlank());
 
-        double amount = Console.promptForCurrency("Enter Payment Amount:\n> ");
-        double payment = -amount; // Converts amount to negative to indicate payment.
-        addTransaction(payment);
+        double parseAmount = -Double.parseDouble(amount); // Converts amount to negative to indicate payment.
+        addTransaction(parseAmount);
         System.out.println("You have successfully made a payment.");
     }
 
@@ -185,8 +193,6 @@ public class Main {
         System.out.println("Press ENTER to skip field");
         LocalDate startDate;
         LocalDate endDate;
-        double parseMin;
-        double parseMax;
 
         String date = Console.promptForString("Enter Start Date: ");
         if (!date.isBlank()) {
@@ -197,44 +203,68 @@ public class Main {
         }
 
         String date2 = Console.promptForString("Enter End Date: ");
-        if (!date.isBlank()) {
+        if (!date2.isBlank()) {
             endDate = Console.parseDate(date2);
         }
         else{
             endDate = LocalDate.now();
         }
-        String description = Console.promptForString("Enter Description: ").toLowerCase();
 
+        String description = Console.promptForString("Enter Description: ").toLowerCase();
         String vendor = Console.promptForString("Enter Vendor: ");
 
-        String minAmount = Console.promptForString("Enter Minimum Amount: ");
-        String maxAmount = Console.promptForString("Enter Maximum Amount: ");
-        if (!minAmount.isBlank()){
-            parseMin = Console.parseCurrency(minAmount);
+        String min;
+        double parseMin;
+        do {
+            min = Console.promptForString("Enter Minimum Amount: ");
         }
-        else{
+        while(!Console.isValidCurrency(min));
+
+        if (min.isBlank()){
             parseMin = 0;
         }
-        if (!maxAmount.isBlank()){
-            parseMax = Console.parseCurrency(maxAmount);
+        else{
+            parseMin = Double.parseDouble(min);
+        }
+
+
+        String max;
+        double parseMax;
+
+        do {
+            max = Console.promptForString("Enter Maximum Amount: ");
+        }while(!Console.isValidCurrency(max));
+
+        
+        if (max.isBlank()){
+            parseMax = 999999999.99;
         }
         else{
-            parseMax = 99999999.99;
+            parseMax = Double.parseDouble(max);
         }
+
+        boolean isFound = false;
 
         for (Transactions t: transactions){
             LocalDate transactionDate = t.getDate();
             String transactionDescription = t.getDescription().toLowerCase();
             String transactionVendor = t.getVendor().toLowerCase();
+            double transactionAmount = Math.abs(t.getAmount()); // For negative transaction amounts.
+
 
             if (transactionDate.isAfter(startDate) &&
             transactionDate.isBefore(endDate) &&
                     transactionDescription.contains(description) &&
             transactionVendor.contains(vendor) &&
-             t.getAmount() >= parseMin &&
-            t.getAmount() <= parseMax){
+                    transactionAmount >= parseMin &&
+                    transactionAmount <= parseMax){
                 System.out.println(t);
+                isFound = true;
             }
+        }
+
+        if (!isFound){
+            System.out.println("No Matches Found.");
         }
 
 

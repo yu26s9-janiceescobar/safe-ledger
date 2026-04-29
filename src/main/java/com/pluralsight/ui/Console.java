@@ -22,38 +22,43 @@ public class Console {
     }
 
     /**
-     * Prompts the user to enter a dollar amount.
-     * @param prompt the message displayed to the user.
-     * @return double returns the amount user entered.
+     * Prompts the user for a currency input.
+     * @return Double the user entered.
      */
-    public static Double promptForCurrency(String prompt){
-        System.out.println(prompt);
-        String userInput = scanner.nextLine().strip();
-        return parseCurrency(userInput);
-    }
-    public static Double parseCurrency(String input){
-        while(true){
-            try {
-                double parseDouble = Double.parseDouble(input);
 
-                if (parseDouble <= 0){
-                    System.out.println("Error: Amount cannot be less than 0.01");
-                }
-                if (parseDouble > 999999999.99){
-                    System.out.println("Error: Amount exceeds Maximum Allowed Value.");
-                }
-                else if(input.contains(".")){
-                    String[] decimalPlaces = input.split("\\.");
-                    if (decimalPlaces[1].length() > 2){
-                        System.out.println("Error: Amount cannot have more than two decimal places.");
-                        continue;
-                    }
-                }
-                return parseDouble;
-            } catch (Exception e) {
-                System.out.println("Invalid Input. Please Try again.");
-            }
+    public static boolean isValidCurrency(String amount) {
+        double parseDouble;
+        if (amount.isBlank()){
+            return true;
         }
+        try {
+            parseDouble = Double.parseDouble(amount);
+            if (parseDouble <= 0) {
+                System.out.println("Error: Amount cannot be less than 0.01");
+                return false;
+            }
+
+
+            if (parseDouble > 999999999.99) {
+                System.out.println("Error: Amount exceeds Maximum Allowed Value.");
+                return false;
+            }
+
+
+            if (amount.contains(".")) {
+                String[] decimalPlaces = amount.split("\\.");
+                if (decimalPlaces[1].length() > 2) {
+                    System.out.println("Error: Amount cannot have more than two decimal places.");
+                    return false;
+                }
+            }
+
+            return true;
+
+        } catch (Exception e) {
+            System.out.println("Invalid Input. Please Try again.");
+        }
+        return false;
     }
 
     /**
@@ -111,6 +116,7 @@ public class Console {
                 }
                 if (parseDate.isBefore(LocalDate.parse("1970-01-01"))){
                     System.out.println("Error: Date cannot be older than 1970-01-01");
+                    continue;
                 }
                 return parseDate;
 
