@@ -6,7 +6,7 @@ import java.time.*;
 import java.util.ArrayList;
 
 public class Main {
-    private static final ArrayList<Transactions> transactions = DataManager.loadTransactions();
+    private static final ArrayList<Transactions> transaction = DataManager.loadTransactions();
 
     public static void main(String[] args){
             String option;
@@ -21,10 +21,10 @@ public class Main {
                 option = Console.promptForOptions("> ", "A","P","L","X");
                 switch (option) {
                     case "A":
-                        addDeposit();
+                        depositScreen();
                         break;
                     case "P":
-                        addPayment();
+                        paymentScreen();
                         break;
                     case "L":
                         ledgerMenu();
@@ -49,13 +49,13 @@ public class Main {
             option = Console.promptForOptions("> ", "A", "D", "P", "R", "H");
             switch (option) {
                 case "A":
-                    displayTransactions(transactions);
+                    displayTransactions(transaction);
                     break;
                 case "D":
-                    displayDeposits();
+                    displayByTransactionType("Deposits", true);
                     break;
                 case "P":
-                    displayPayments();
+                    displayByTransactionType("Payments", false);
                     break;
                 case "R":
                     reportMenu();
@@ -66,46 +66,30 @@ public class Main {
             }
         }while(!option.equals("H"));
     }
+    
 
-    /**
-     * Displays all deposits to user.
-     */
-    private static void displayDeposits(){
-        ArrayList<Transactions> deposits = new ArrayList<>();
-        for (Transactions t: transactions){
-            if (t.getAmount() > 0){
-                deposits.add(t);
+    private static void displayByTransactionType(String header, boolean isDeposit){
+        ArrayList<Transactions> filter = new ArrayList<>();
+        for (Transactions t: transaction){
+            if (isDeposit ? t.getAmount() > 0: t.getAmount() < 0 ){
+                filter.add(t);
             }
         }
-        System.out.printf("%70s %n", "Deposits");
-        displayTransactions(deposits);
-    }
-
-    /**
-     * Displays all payments to user.
-     */
-    private static void displayPayments(){
-        ArrayList<Transactions> payments = new ArrayList<>();
-        for (Transactions t: transactions){
-            if (t.getAmount() < 0){
-                payments.add(t);
-            }
-        }
-        System.out.printf("%70s %n", "Payments");
-        displayTransactions(payments);
+        System.out.printf("%70s %n", header);
+        displayTransactions(filter);
     }
 
     /**
      * Allows user to make a deposit.
      */
-    private static void addDeposit(){
+    private static void depositScreen(){
         System.out.println("\tDeposit Screen");
         String amount;
         do{
             amount = Console.promptForString("Enter Deposit Amount: ");
-        }while(!Console.isValidCurrency(amount) && !amount.isBlank());
+        }while(!Console.isValidCurrency(amount) || amount.isBlank());
 
-        addTransaction(Double.parseDouble(amount));
+        transactionScreen(Double.parseDouble(amount));
 
         System.out.println("You have successfully made a deposit.");
     }
@@ -113,23 +97,23 @@ public class Main {
     /**
      * Allows user to make a payment.
      */
-    private static void addPayment(){
+    private static void paymentScreen(){
         System.out.println("\tPayment Screen");
         String amount;
         do {
             amount = Console.promptForString("Enter Payment Amount: ");
-        }while(!Console.isValidCurrency(amount) && !amount.isBlank());
+        }while(!Console.isValidCurrency(amount) || amount.isBlank());
 
         double parseAmount = -Double.parseDouble(amount); // Converts amount to negative to indicate payment.
-        addTransaction(parseAmount);
+        transactionScreen(parseAmount);
         System.out.println("You have successfully made a payment.");
     }
 
     /**
-     * Allows user to make a transaction.
+     * Stores user transaction information.
      * @param amount the deposit or payment amount.
      */
-    private static void addTransaction(double amount){
+    private static void transactionScreen(double amount){
         System.out.println("""
                     Enter an Option:
                     \t[1] Custom Date and Time
@@ -188,30 +172,15 @@ public class Main {
             }
         }while(option != 0);
     }
+
     private static void customSearch(){
         System.out.println("\t\tCustom Search Filter");
         System.out.println("Press ENTER to skip field");
-        LocalDate startDate;
-        LocalDate endDate;
-
-        String date = Console.promptForString("Enter Start Date: ");
-        if (!date.isBlank()) {
-            startDate = Console.parseDate(date);
-        }
-        else{
-            startDate = LocalDate.parse("1970-01-01");
-        }
-
-        String date2 = Console.promptForString("Enter End Date: ");
-        if (!date2.isBlank()) {
-            endDate = Console.parseDate(date2);
-        }
-        else{
-            endDate = LocalDate.now();
-        }
+        LocalDate startDate = Console.customDate(LocalDate.parse("1970-01-01"), "Enter Start Date: ");
+        LocalDate endDate = Console.customDate(LocalDate.now(), "Enter End Date: ");
 
         String description = Console.promptForString("Enter Description: ").toLowerCase();
-        String vendor = Console.promptForString("Enter Vendor: ");
+        String vendor = Console.promptForString("Enter Vendor: ").toLowerCase();
 
         String min;
         double parseMin;
@@ -235,7 +204,7 @@ public class Main {
             max = Console.promptForString("Enter Maximum Amount: ");
         }while(!Console.isValidCurrency(max));
 
-        
+
         if (max.isBlank()){
             parseMax = 999999999.99;
         }
@@ -245,10 +214,14 @@ public class Main {
 
         boolean isFound = false;
 
-        for (Transactions t: transactions){
+        for (Transactions t: transaction){
+
             LocalDate transactionDate = t.getDate();
+
             String transactionDescription = t.getDescription().toLowerCase();
+
             String transactionVendor = t.getVendor().toLowerCase();
+
             double transactionAmount = Math.abs(t.getAmount()); // For negative transaction amounts.
 
 
@@ -258,6 +231,7 @@ public class Main {
             transactionVendor.contains(vendor) &&
                     transactionAmount >= parseMin &&
                     transactionAmount <= parseMax){
+
                 System.out.println(t);
                 isFound = true;
             }
@@ -274,10 +248,9 @@ public class Main {
      * Lets user search by vendor name.
      */
     private static void searchByVendor(){
-        System.out.println("\t\tSearch By Vendor:");
-        String vendor = Console.promptForString("Enter Vendor\n> ").toLowerCase();
+        String vendor = Console.promptForString("Enter Vendor: ").toLowerCase();
         boolean isFound = false;
-        for (Transactions t: transactions){
+        for (Transactions t: transaction){
             if (t.getVendor().toLowerCase().contains(vendor)){
                 System.out.println(t);
                 isFound = true;
@@ -294,7 +267,7 @@ public class Main {
         System.out.printf("%70s", "Month to Date Report");
         transactionHeader();
         YearMonth currentYearMonth = YearMonth.now();
-        for (Transactions t: transactions){
+        for (Transactions t: transaction){
             YearMonth transactionMonth = YearMonth.from(t.getDateTime());
             if (currentYearMonth.equals(transactionMonth)){
                 System.out.println(t);
@@ -309,7 +282,7 @@ public class Main {
         System.out.printf("%70s %n", "Year to Date Report");
         transactionHeader();
         Year currentYear = Year.now();
-        for (Transactions t: transactions){
+        for (Transactions t: transaction){
             Year transactionYear = Year.from(t.getDateTime());
             if (currentYear.equals(transactionYear)) {
                 System.out.println(t);
@@ -320,7 +293,7 @@ public class Main {
         System.out.printf("%70s %n", "Last Year Report");
         transactionHeader();
         Year priorYear = Year.now().minusYears(1);
-        for (Transactions t: transactions){
+        for (Transactions t: transaction){
             Year transactionYear = Year.from(t.getDateTime()); // Returns yyyy
             if (priorYear.equals(transactionYear)){
                 System.out.println(t);
@@ -335,7 +308,7 @@ public class Main {
         System.out.printf("%70s", "Previous Month Report");
         transactionHeader();
         YearMonth priorMonth = YearMonth.now().minusMonths(1);
-        for (Transactions t: transactions){
+        for (Transactions t: transaction){
             YearMonth transactionMonth = YearMonth.from(t.getDateTime());
             if (transactionMonth.equals(priorMonth)){
                 System.out.println(t);
@@ -343,9 +316,9 @@ public class Main {
         }
     }
 
-    private static void displayTransactions(ArrayList<Transactions> transactions){
+    private static void displayTransactions(ArrayList<Transactions> transaction){
         transactionHeader();
-        for (Transactions t: transactions){
+        for (Transactions t: transaction){
             System.out.println(t);
         }
     }

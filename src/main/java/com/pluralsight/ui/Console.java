@@ -140,6 +140,17 @@ public class Console {
         }
 
     }
+    public static LocalDate customDate(LocalDate defaultDate, String prompt){
+        LocalDate parseDate;
+        String date = Console.promptForString(prompt);
+        if (!date.isBlank()) {
+            parseDate = parseDate(date);
+        }
+        else{
+            parseDate = defaultDate;
+        }
+        return parseDate;
+    }
 
     /**
      * Prompts user for an integer between a given range.
