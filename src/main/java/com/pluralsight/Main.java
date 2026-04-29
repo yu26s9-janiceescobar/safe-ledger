@@ -36,6 +36,7 @@ public class Main {
             }
             while(!option.equals("X"));
     }
+
     private static void ledgerMenu() {
         String option;
         do {
@@ -66,8 +67,12 @@ public class Main {
             }
         }while(!option.equals("H"));
     }
-    
 
+    /**
+     * Displays transaction either by deposit or payment type.
+     * @param header the header displayed to the user.
+     * @param isDeposit true if the transactions are deposits, false if they are payments.
+     */
     private static void displayByTransactionType(String header, boolean isDeposit){
         ArrayList<Transactions> filter = new ArrayList<>();
         for (Transactions t: transaction){
@@ -172,7 +177,14 @@ public class Main {
             }
         }while(option != 0);
     }
+    private static double customAmount(String prompt, double defaultAmount){
+        String amount;
+        do {
+            amount = Console.promptForString(prompt);
+        }while(!Console.isValidCurrency(amount));
 
+        return amount.isBlank() ? defaultAmount : Double.parseDouble(amount);
+    }
     private static void customSearch(){
         System.out.println("\t\tCustom Search Filter");
         System.out.println("Press ENTER to skip field");
@@ -182,35 +194,9 @@ public class Main {
         String description = Console.promptForString("Enter Description: ").toLowerCase();
         String vendor = Console.promptForString("Enter Vendor: ").toLowerCase();
 
-        String min;
-        double parseMin;
-        do {
-            min = Console.promptForString("Enter Minimum Amount: ");
-        }
-        while(!Console.isValidCurrency(min));
+        double parseMin = customAmount("Enter Minimum Amount: ", 0.0);
+        double parseMax = customAmount("Enter Maximum Amount: ", 999999999.99);
 
-        if (min.isBlank()){
-            parseMin = 0;
-        }
-        else{
-            parseMin = Double.parseDouble(min);
-        }
-
-
-        String max;
-        double parseMax;
-
-        do {
-            max = Console.promptForString("Enter Maximum Amount: ");
-        }while(!Console.isValidCurrency(max));
-
-
-        if (max.isBlank()){
-            parseMax = 999999999.99;
-        }
-        else{
-            parseMax = Double.parseDouble(max);
-        }
 
         boolean isFound = false;
 
