@@ -30,7 +30,7 @@ public class Main {
                         ledgerMenu();
                         break;
                     case "X":
-                        Console.exitApplication();
+                        System.out.println("Exiting Application...");
                         break;
                 }
             }
@@ -86,13 +86,7 @@ public class Main {
 
     private static void transactionScreen(String prompt, boolean isDeposit){
         System.out.println("\t\t" + prompt);
-        String amount;
-
-        do {
-            amount = Console.promptForString("Enter "  + (isDeposit ? "Deposit" : "Payment") + " Amount: ");
-        }while(!Console.isValidAmount(amount) || amount.isBlank());
-
-        double parseAmount = Double.parseDouble(amount);
+        double parseAmount = Console.promptForAmount("Enter " + (isDeposit ? "Deposit" : "Payment") + " Amount: ");
         double amountType = isDeposit ? parseAmount : -parseAmount;
 
         System.out.println("""

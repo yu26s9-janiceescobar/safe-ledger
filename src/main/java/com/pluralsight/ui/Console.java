@@ -21,57 +21,49 @@ public class Console {
         System.out.print(prompt);
         return scanner.nextLine().strip();
     }
-    public static void exitApplication(){
-        System.out.println("Exiting Application...");
+
+    public static double promptForAmount(String prompt) {
+        while(true){
+            String userInput = promptForString(prompt);
+            try {
+                return parseAmount(userInput);
+            }catch(Exception e){
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
-    /**
-     * Prompts the user for a currency input.
-     * @return Double the user entered.
-     */
+    public static double parseAmount(String amountInput) {
+            try {
+                double parseAmount = Double.parseDouble(amountInput);
 
-    public static boolean isValidAmount(String amount) {
-        double parseDouble;
-        if (amount.isBlank()){
-            return true;
-        }
-        try {
-            parseDouble = Double.parseDouble(amount);
-            if (parseDouble <= MIN_AMOUNT) {
-                System.out.println("Error: Amount cannot be less than 0.01");
-                return false;
-            }
-
-
-            if (parseDouble > MAX_AMOUNT) {
-                System.out.println("Error: Amount exceeds Maximum Allowed Value.");
-                return false;
-            }
-
-
-            if (amount.contains(".")) {
-                String[] decimalPlaces = amount.split("\\.");
-                if (decimalPlaces[1].length() > 2) {
-                    System.out.println("Error: Amount cannot have more than two decimal places.");
-                    return false;
+                if (parseAmount <= MIN_AMOUNT || parseAmount >= MAX_AMOUNT ){
+                    throw new IllegalArgumentException("Error: Amount has to be between " + MIN_AMOUNT + " and " + MAX_AMOUNT);
                 }
+                if (amountInput.contains(".")){
+                    String[] decimalPlaces = amountInput.split("\\.");
+                    if (decimalPlaces[1].length() > 2) {
+                        throw new IllegalArgumentException("Error: Amount cannot be more than two decimal places.");
+                    }
+                }
+                return parseAmount;
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Error: Invalid Date");
             }
-
-            return true;
-
-        } catch (Exception e) {
-            System.out.println("Invalid Input. Please Try again.");
-        }
-        return false;
     }
+
+
     public static double customAmount(String prompt, boolean isMinAmount){
-        String amount;
-        do {
-            amount = Console.promptForString(prompt);
-        }while(!Console.isValidAmount(amount));
         double defaultAmount = isMinAmount ? MIN_AMOUNT : MAX_AMOUNT;
 
-        return amount.isBlank() ? defaultAmount : Double.parseDouble(amount);
+        while(true) {
+            try {
+                String userInput = promptForString(prompt);
+                return userInput.isBlank() ? defaultAmount : parseAmount(userInput);
+            }catch(IllegalArgumentException e){
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     /**
