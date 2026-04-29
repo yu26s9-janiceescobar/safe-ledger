@@ -7,6 +7,10 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 public class Console {
     private final static Scanner scanner = new Scanner(System.in);
+    private final static LocalDate MIN_DATE = LocalDate.parse("1970-01-01");
+    private final static LocalDate MAX_DATE = LocalDate.now();
+    private final static double MAX_AMOUNT = 999999999.99;
+    private final static double MIN_AMOUNT = 0.0;
 
     /**
      * Prompts user to enter a string.
@@ -26,20 +30,20 @@ public class Console {
      * @return Double the user entered.
      */
 
-    public static boolean isValidCurrency(String amount) {
+    public static boolean isValidAmount(String amount) {
         double parseDouble;
         if (amount.isBlank()){
             return true;
         }
         try {
             parseDouble = Double.parseDouble(amount);
-            if (parseDouble <= 0) {
+            if (parseDouble <= MIN_AMOUNT) {
                 System.out.println("Error: Amount cannot be less than 0.01");
                 return false;
             }
 
 
-            if (parseDouble > 999999999.99) {
+            if (parseDouble > MAX_AMOUNT) {
                 System.out.println("Error: Amount exceeds Maximum Allowed Value.");
                 return false;
             }
@@ -59,6 +63,15 @@ public class Console {
             System.out.println("Invalid Input. Please Try again.");
         }
         return false;
+    }
+    public static double customAmount(String prompt, boolean isMinAmount){
+        String amount;
+        do {
+            amount = Console.promptForString(prompt);
+        }while(!Console.isValidAmount(amount));
+        double defaultAmount = isMinAmount ? MIN_AMOUNT : MAX_AMOUNT;
+
+        return amount.isBlank() ? defaultAmount : Double.parseDouble(amount);
     }
 
     /**
@@ -107,19 +120,13 @@ public class Console {
     public static LocalDate parseDate(String input){
         while(true){
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-M-d");
-            LocalDate today = LocalDate.now();
             try {
                 LocalDate parseDate = LocalDate.parse(input, fmt);
-                if (parseDate.isAfter(today)){
-                    System.out.println("Error: No future dates allowed. Please Try Again.");
-                    continue;
-                }
-                if (parseDate.isBefore(LocalDate.parse("1970-01-01"))){
-                    System.out.println("Error: Date cannot be older than 1970-01-01");
+                if (parseDate.isAfter(MAX_DATE) || parseDate.isBefore(MIN_DATE)){
+                    System.out.println("Error: Date has to be between 1970-01-01 and today");
                     continue;
                 }
                 return parseDate;
-
             } catch (DateTimeParseException e) {
                 System.out.println("Error: Enter Valid Date. Please Try Again.");
             }
@@ -131,25 +138,19 @@ public class Console {
      * @return LocalTime, the time user entered.
      */
     public static LocalTime parseTime(String input){
-    while(true) {
+        while(true) {
             try {
                 return LocalTime.parse(input);
-            } catch (DateTimeParseException e) {
+            }catch (DateTimeParseException e){
                 System.out.println("Invalid Input. Please Try Again.");
             }
         }
-
     }
-    public static LocalDate customDate(LocalDate defaultDate, String prompt){
-        LocalDate parseDate;
+
+    public static LocalDate customDate(String prompt, boolean isStartDate){
         String date = Console.promptForString(prompt);
-        if (!date.isBlank()) {
-            parseDate = parseDate(date);
-        }
-        else{
-            parseDate = defaultDate;
-        }
-        return parseDate;
+        LocalDate defaultDate = isStartDate ? MIN_DATE : MAX_DATE;
+        return date.isBlank() ? defaultDate : parseDate(date);
     }
 
     /**
@@ -168,10 +169,10 @@ public class Console {
                 if (parseInt >= min && parseInt <= max){
                     return parseInt;
                 }
-            }catch(Exception e){
+                System.out.println("Please enter an option between " + min + "-" + max);
+            }catch(NumberFormatException e){
                 System.out.println("Invalid input. Please Try Again!");
             }
-            System.out.println("Please enter an option between " + min + "-" + max);
         }
     }
 }

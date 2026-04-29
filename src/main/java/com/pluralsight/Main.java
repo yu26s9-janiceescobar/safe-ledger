@@ -90,7 +90,7 @@ public class Main {
 
         do {
             amount = Console.promptForString("Enter "  + (isDeposit ? "Deposit" : "Payment") + " Amount: ");
-        }while(!Console.isValidCurrency(amount) || amount.isBlank());
+        }while(!Console.isValidAmount(amount) || amount.isBlank());
 
         double parseAmount = Double.parseDouble(amount);
         double amountType = isDeposit ? parseAmount : -parseAmount;
@@ -144,44 +144,31 @@ public class Main {
                     searchByVendor();
                     break;
                 case 6:
-                    customSearch();
+                    customSearchScreen();
                     break;
             }
         }while(option != 0);
     }
 
-    private static double customAmount(String prompt, double defaultAmount){
-        String amount;
-        do {
-            amount = Console.promptForString(prompt);
-        }while(!Console.isValidCurrency(amount));
 
-        return amount.isBlank() ? defaultAmount : Double.parseDouble(amount);
-    }
-
-    private static void customSearch(){
+    private static void customSearchScreen(){
+        ArrayList<Transactions> customSearch = new ArrayList<>();
         System.out.println("\t\tCustom Search Filter");
         System.out.println("Press ENTER to skip field");
-        LocalDate startDate = Console.customDate(LocalDate.parse("1970-01-01"), "Enter Start Date: ");
-        LocalDate endDate = Console.customDate(LocalDate.now(), "Enter End Date: ");
 
+        LocalDate startDate = Console.customDate("Enter Start Date: ", true);
+        LocalDate endDate = Console.customDate("Enter End Date: ", false);
         String description = Console.promptForString("Enter Description: ").toLowerCase();
         String vendor = Console.promptForString("Enter Vendor: ").toLowerCase();
-
-        double parseMin = customAmount("Enter Minimum Amount: ", 0.0);
-        double parseMax = customAmount("Enter Maximum Amount: ", 999999999.99);
-
-
+        double parseMin = Console.customAmount("Enter Minimum Amount: ", true);
+        double parseMax = Console.customAmount("Enter Maximum Amount: ", false);
         boolean isFound = false;
 
         for (Transactions t: transaction){
 
             LocalDate transactionDate = t.getDate();
-
             String transactionDescription = t.getDescription().toLowerCase();
-
             String transactionVendor = t.getVendor().toLowerCase();
-
             double transactionAmount = Math.abs(t.getAmount()); // For negative transaction amounts.
 
 
@@ -192,17 +179,14 @@ public class Main {
                     transactionAmount >= parseMin &&
                     transactionAmount <= parseMax){
 
-                System.out.println(t);
+                customSearch.add(t);
                 isFound = true;
             }
         }
-
+        displayTransactions(customSearch);
         if (!isFound){
             System.out.println("No Matches Found.");
         }
-
-
-
     }
     /**
      * Lets user search by vendor name.
