@@ -21,10 +21,10 @@ public class Main {
                 option = Console.promptForOptions("> ", "A","P","L","X");
                 switch (option) {
                     case "A":
-                        depositScreen();
+                        transactionScreen("Deposit Screen", true);
                         break;
                     case "P":
-                        paymentScreen();
+                        transactionScreen("Payment Screen", false);
                         break;
                     case "L":
                         ledgerMenu();
@@ -84,59 +84,31 @@ public class Main {
         displayTransactions(filter);
     }
 
-    /**
-     * Allows user to make a deposit.
-     */
-    private static void depositScreen(){
-        System.out.println("\tDeposit Screen");
+    private static void transactionScreen(String prompt, boolean isDeposit){
+        System.out.println("\t\t" + prompt);
         String amount;
-        do{
-            amount = Console.promptForString("Enter Deposit Amount: ");
-        }while(!Console.isValidCurrency(amount) || amount.isBlank());
 
-        transactionScreen(Double.parseDouble(amount));
-
-        System.out.println("You have successfully made a deposit.");
-    }
-
-    /**
-     * Allows user to make a payment.
-     */
-    private static void paymentScreen(){
-        System.out.println("\tPayment Screen");
-        String amount;
         do {
-            amount = Console.promptForString("Enter Payment Amount: ");
+            amount = Console.promptForString("Enter "  + (isDeposit ? "Deposit" : "Payment") + " Amount: ");
         }while(!Console.isValidCurrency(amount) || amount.isBlank());
 
-        double parseAmount = -Double.parseDouble(amount); // Converts amount to negative to indicate payment.
-        transactionScreen(parseAmount);
-        System.out.println("You have successfully made a payment.");
-    }
+        double parseAmount = Double.parseDouble(amount);
+        double amountType = isDeposit ? parseAmount : -parseAmount;
 
-    /**
-     * Stores user transaction information.
-     * @param amount the deposit or payment amount.
-     */
-    private static void transactionScreen(double amount){
         System.out.println("""
                     Enter an Option:
                     \t[1] Custom Date and Time
                     \t[2] Current Date and Time""");
-        LocalDateTime dateTime;
+
         int option = Console.promptForInt("> ", 1, 2);
-        if (option == 1){
-            dateTime = Console.promptForDateTime();
-        }
-        else{
-           dateTime = LocalDateTime.now();
-        }
-        String description = Console.promptForString("Enter Description:\n> ");
-        String vendor = Console.promptForString("Enter vendor:\n> ");
+        LocalDateTime dateTime = (option == 1) ? Console.promptForDateTime() : LocalDateTime.now();
 
-        DataManager.addTransaction(dateTime, description, vendor, amount);
+        String description = Console.promptForString("Enter Description: ");
+        String vendor = Console.promptForString("Enter vendor: ");
 
+        DataManager.addTransaction(dateTime, description, vendor, amountType);
     }
+
 
     private static void reportMenu(){
         int option;
@@ -177,6 +149,7 @@ public class Main {
             }
         }while(option != 0);
     }
+
     private static double customAmount(String prompt, double defaultAmount){
         String amount;
         do {
@@ -185,6 +158,7 @@ public class Main {
 
         return amount.isBlank() ? defaultAmount : Double.parseDouble(amount);
     }
+
     private static void customSearch(){
         System.out.println("\t\tCustom Search Filter");
         System.out.println("Press ENTER to skip field");

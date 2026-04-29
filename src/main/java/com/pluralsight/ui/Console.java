@@ -88,7 +88,7 @@ public class Console {
             System.out.print("Enter Date: ");
             String dateInput = scanner.nextLine().strip();
             LocalDate date = parseDate(dateInput);
-            System.out.println("Enter Time: ");
+            System.out.print("Enter Time: ");
             String timeInput = scanner.nextLine().strip();
             LocalTime time = parseTime(timeInput);
             LocalDateTime dateTime = LocalDateTime.of(date, time);
