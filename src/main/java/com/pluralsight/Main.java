@@ -84,6 +84,12 @@ public class Main {
         displayTransactions(filter);
     }
 
+    /**
+     * Displays Transaction screen and prompts the user to enter information about transaction including
+     * amount, custom or current date, description, and vendor of the transaction.
+     * @param prompt the message displayed to the user.
+     * @param isDeposit true if it is a deposit transaction, false if it is a payment transaction.
+     */
     private static void transactionScreen(String prompt, boolean isDeposit){
         System.out.println("\t\t" + prompt);
         double parseAmount = Console.promptForAmount("Enter " + (isDeposit ? "Deposit" : "Payment") + " Amount: ");
@@ -103,7 +109,11 @@ public class Main {
         DataManager.addTransaction(dateTime, description, vendor, amountType);
     }
 
-
+    /**
+     * Displays Reports menu and prompts user to choose an option including
+     * Month to date transactions, Previous month transactions, Year to date transactions,
+     * search by vendor option, a custom search option, or return to ledger menu option.
+     */
     private static void reportMenu(){
         int option;
         do{
@@ -144,14 +154,17 @@ public class Main {
         }while(option != 0);
     }
 
-
+    /**
+     * Displays a custom search screen and prompts user to enter
+     * custom filters for their transactions.
+     */
     private static void customSearchScreen(){
         ArrayList<Transactions> customSearch = new ArrayList<>();
         System.out.println("\t\tCustom Search Filter");
         System.out.println("Press ENTER to skip field");
 
-        LocalDate startDate = Console.customDate("Enter Start Date: ", true);
-        LocalDate endDate = Console.customDate("Enter End Date: ", false);
+        LocalDate startDate = Console.promptCustomDate("Enter Start Date: ", true);
+        LocalDate endDate = Console.promptCustomDate("Enter End Date: ", false);
         String description = Console.promptForString("Enter Description: ").toLowerCase();
         String vendor = Console.promptForString("Enter Vendor: ").toLowerCase();
         double parseMin = Console.customAmount("Enter Minimum Amount: ", true);
@@ -227,6 +240,10 @@ public class Main {
             }
         }
     }
+
+    /**
+     * Displays transactions dated from last year.
+     */
     private static void displayPriorYear(){
         System.out.printf("%70s %n", "Last Year Report");
         transactionHeader();
@@ -254,12 +271,17 @@ public class Main {
         }
     }
 
+    /**
+     * Displays transactions to user.
+     * @param transaction the transactions being displayed.
+     */
     private static void displayTransactions(ArrayList<Transactions> transaction){
         transactionHeader();
         for (Transactions t: transaction){
             System.out.println(t);
         }
     }
+
     private static void transactionHeader(){
         System.out.printf("%-20s %-20s %-45s %-30s %s %n", "Date", "Time", "Description", "Vendor", "Amount");
         System.out.println("-".repeat(140));
