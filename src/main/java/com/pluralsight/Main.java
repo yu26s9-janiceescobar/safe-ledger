@@ -268,9 +268,10 @@ public class Main {
     }
 
     private static int incrementPage(int currentPage){
-        // page = 1, page = 2, page = 3
-        int numOfPages = transaction.size() / 10;
-        int lastPage = (transaction.size() % 10 == 0 ) ?  numOfPages : numOfPages + 1;
+        int previousTransactionsDisplayed = (currentPage * 10) - 10;
+        int lastPage = (transaction.size() % 10 == 0 ) ?  transaction.size() / 10 : transaction.size() / 10 + 1;
+        int transactionsLeft = transaction.size() - previousTransactionsDisplayed;
+
         if (currentPage < 1){
             System.out.println("You are on the first page.");
             return currentPage + 1;
@@ -281,15 +282,19 @@ public class Main {
         }
 
         System.out.println("Page " + currentPage);
-        int itemIndex = currentPage * 10;
+
         if (transaction.size() <= 10){
             for (Transactions t: transaction){
                 System.out.println(t);
             }
 
         }else{
-            for (int i = itemIndex - 10; i < itemIndex; i++){
+            for (int i = previousTransactionsDisplayed; i < previousTransactionsDisplayed + 10 ; i++){
                 System.out.println(transaction.get(i));
+                transactionsLeft--;
+                if (transactionsLeft == 0){
+                    return lastPage;
+                }
             }
         }
         return currentPage;
@@ -303,9 +308,9 @@ public class Main {
         String option;
         int pageNum = 1;
         incrementPage(pageNum);
-        pageNum++;
         do{
-            option = Console.promptForOptions("[P] Previous Page [N] Next Page [X] Exit","P","N","X");
+            System.out.println("[P] Previous Page [N] Next Page [X] Exit");
+            option = Console.promptForOptions(">","P","N","X");
             switch(option){
                 case "P":
                     pageNum--;
