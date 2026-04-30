@@ -95,8 +95,12 @@ public class Main {
                 filter.add(t);
             }
         }
-        System.out.printf("%70s %n", header);
-        displayTransactionsMenu(filter);
+        if (filter.isEmpty()) {
+            System.out.print("No Transactions Found");
+        } else {
+            displayTransactionsMenu(filter);
+        }
+
     }
 
     /**
@@ -184,7 +188,7 @@ public class Main {
         String vendorFilter = Console.promptForString("Enter Vendor: ").toLowerCase();
         double parseMinFilter = Console.customAmount("Enter Minimum Amount: ", true);
         double parseMaxFilter = Console.customAmount("Enter Maximum Amount: ", false);
-        boolean isFound = false;
+
 
         for (Transactions t: transaction){
 
@@ -202,13 +206,14 @@ public class Main {
                     transactionAmount <= parseMaxFilter){
 
                 customSearch.add(t);
-                isFound = true;
+
             }
         }
 
-        if (!isFound){
-            System.out.println("No Matches Found.");
-        }else{
+        if (customSearch.isEmpty()) {
+            System.out.print("No Transactions Found");
+
+        } else {
             displayTransactionsMenu(customSearch);
         }
     }
@@ -216,20 +221,19 @@ public class Main {
      * Lets user search by vendor name.
      */
     private static void searchByVendor(){
-        ArrayList<Transactions> transactions = new ArrayList<>();
+        ArrayList<Transactions> filter = new ArrayList<>();
         String vendor = Console.promptForString("Enter Vendor: ").toLowerCase();
-        boolean isFound = false;
+
         for (Transactions t: transaction){
             if (t.getVendor().toLowerCase().contains(vendor)){
-                transactions.add(t);
-                isFound = true;
+                filter.add(t);
+
             }
         }
-        if (!isFound){
-            System.out.println("No Matching Vendors.");
-        }
-        else{
-            displayTransactionsMenu(transactions);
+        if (filter.isEmpty()) {
+            System.out.print("No Transactions Found");
+        } else {
+            displayTransactionsMenu(filter);
         }
     }
 
@@ -240,13 +244,19 @@ public class Main {
      */
     private static void displayMonthReport(String prompt, Report type){
         System.out.printf("%70s %n", prompt);
-        transactionHeader();
-        YearMonth filter = (type == Report.CURRENT) ? YearMonth.now() : YearMonth.now().minusMonths(1);
+        ArrayList<Transactions> filter = new ArrayList<>();
+
+        YearMonth yearMonth = (type == Report.CURRENT) ? YearMonth.now() : YearMonth.now().minusMonths(1);
         for (Transactions t: transaction){
             YearMonth transactionMonth = YearMonth.from(t.getDateTime());
-            if (filter.equals(transactionMonth)){
-                System.out.println(t);
+            if (yearMonth.equals(transactionMonth)){
+                filter.add(t);
             }
+        }
+        if (filter.isEmpty()) {
+            System.out.print("No Transactions Found");
+        } else {
+            displayTransactionsMenu(filter);
         }
     }
 
@@ -257,17 +267,27 @@ public class Main {
      */
     private static void displayYearReport(String prompt, Report type){
         System.out.printf("%70s %n", prompt);
-        transactionHeader();
+        ArrayList<Transactions> filter = new ArrayList<>();
+
         Year year = (type == Report.CURRENT) ? Year.now() : Year.now().minusYears(1);
         for (Transactions t: transaction){
             Year transactionYear = Year.from(t.getDateTime());
             if (year.equals(transactionYear)){
-                System.out.println(t);
+                filter.add(t);
+
             }
+        }
+
+        if (filter.isEmpty()) {
+            System.out.print("No Transactions Found");
+        } else {
+            displayTransactionsMenu(filter);
         }
     }
 
-    private static int incrementPage(int currentPage){
+
+
+    private static int displayPage(int currentPage, ArrayList<Transactions> transaction){
         int previousTransactionsDisplayed = (currentPage * 10) - 10;
         int lastPage = (transaction.size() % 10 == 0 ) ?  transaction.size() / 10 : transaction.size() / 10 + 1;
         int transactionsLeft = transaction.size() - previousTransactionsDisplayed;
@@ -282,19 +302,13 @@ public class Main {
         }
 
         System.out.println("Page " + currentPage);
-
-        if (transaction.size() <= 10){
-            for (Transactions t: transaction){
-                System.out.println(t);
-            }
-
-        }else{
-            for (int i = previousTransactionsDisplayed; i < previousTransactionsDisplayed + 10 ; i++){
-                System.out.println(transaction.get(i));
-                transactionsLeft--;
-                if (transactionsLeft == 0){
-                    return lastPage;
-                }
+        System.out.printf("%-20s %-20s %-45s %-30s %s %n", "Date", "Time", "Description", "Vendor", "Amount");
+        System.out.println("-".repeat(140));
+        for (int i = previousTransactionsDisplayed; i < previousTransactionsDisplayed + 10 ; i++){
+            System.out.println(transaction.get(i));
+            transactionsLeft--;
+            if (transactionsLeft == 0){
+                return lastPage;
             }
         }
         return currentPage;
@@ -307,21 +321,22 @@ public class Main {
     private static void displayTransactionsMenu(ArrayList<Transactions> transaction){
         String option;
         int pageNum = 1;
-        incrementPage(pageNum);
+
+        displayPage(pageNum, transaction);
         do{
             System.out.println("[P] Previous Page [N] Next Page [X] Exit");
             option = Console.promptForOptions(">","P","N","X");
             switch(option){
                 case "P":
                     pageNum--;
-                    pageNum = incrementPage(pageNum);
+                    pageNum = displayPage(pageNum, transaction);
                     break;
                 case "N":
                     pageNum++;
-                    pageNum = incrementPage(pageNum);
+                    pageNum = displayPage(pageNum, transaction);
                     break;
                 case "X":
-                    System.out.println("Returning back to Ledger Menu...");
+                    System.out.println("Returning back to Menu...");
                     break;
             }
 
@@ -329,10 +344,7 @@ public class Main {
 
     }
 
-    private static void transactionHeader(){
-        System.out.printf("%-20s %-20s %-45s %-30s %s %n", "Date", "Time", "Description", "Vendor", "Amount");
-        System.out.println("-".repeat(140));
-    }
+
 }
 
 
