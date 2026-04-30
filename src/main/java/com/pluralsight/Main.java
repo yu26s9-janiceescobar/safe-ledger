@@ -7,7 +7,16 @@ import java.util.ArrayList;
 
 public class Main {
     private static final ArrayList<Transactions> transaction = DataManager.loadTransactions();
+    private enum TransactionType {
+        DEPOSIT, PAYMENT
+    }
 
+    /**
+     * Entry point for program.
+     * Displays Main Menu and prompts user to select an option including
+     * add deposit, add payment, go to ledger menu, or exit program.
+     * @param args not used in program.
+     */
     public static void main(String[] args){
             String option;
             do {
@@ -21,10 +30,10 @@ public class Main {
                 option = Console.promptForOptions("> ", "A","P","L","X");
                 switch (option) {
                     case "A":
-                        transactionScreen("Deposit Screen", true);
+                        transactionScreen("Deposit Screen", TransactionType.DEPOSIT);
                         break;
                     case "P":
-                        transactionScreen("Payment Screen", false);
+                        transactionScreen("Payment Screen", TransactionType.PAYMENT);
                         break;
                     case "L":
                         ledgerMenu();
@@ -37,6 +46,10 @@ public class Main {
             while(!option.equals("X"));
     }
 
+    /**
+     * Displays ledger menu and prompts user to select an option including
+     * display all entries, display deposits, display payments, reports, and return to home screen.
+     */
     private static void ledgerMenu() {
         String option;
         do {
@@ -53,10 +66,10 @@ public class Main {
                     displayTransactions(transaction);
                     break;
                 case "D":
-                    displayByTransactionType("Deposits", true);
+                    displayByTransactionType("Deposits", TransactionType.DEPOSIT);
                     break;
                 case "P":
-                    displayByTransactionType("Payments", false);
+                    displayByTransactionType("Payments", TransactionType.PAYMENT);
                     break;
                 case "R":
                     reportMenu();
@@ -71,12 +84,12 @@ public class Main {
     /**
      * Displays transaction either by deposit or payment type.
      * @param header the header displayed to the user.
-     * @param isDeposit true if the transactions are deposits, false if they are payments.
+     * @param type true if the transaction type is deposit, false if it is payment.
      */
-    private static void displayByTransactionType(String header, boolean isDeposit){
+    private static void displayByTransactionType(String header, TransactionType type){
         ArrayList<Transactions> filter = new ArrayList<>();
         for (Transactions t: transaction){
-            if (isDeposit ? t.getAmount() > 0: t.getAmount() < 0 ){
+            if ( type == TransactionType.DEPOSIT ? t.getAmount() > 0: t.getAmount() < 0 ){
                 filter.add(t);
             }
         }
@@ -88,12 +101,12 @@ public class Main {
      * Displays Transaction screen and prompts the user to enter information about transaction including
      * amount, custom or current date, description, and vendor of the transaction.
      * @param prompt the message displayed to the user.
-     * @param isDeposit true if it is a deposit transaction, false if it is a payment transaction.
+     * @param type true if type of transaction is deposit, false if it is a payment transaction.
      */
-    private static void transactionScreen(String prompt, boolean isDeposit){
+    private static void transactionScreen(String prompt, TransactionType type){
         System.out.println("\t\t" + prompt);
-        double parseAmount = Console.promptForAmount("Enter " + (isDeposit ? "Deposit" : "Payment") + " Amount: ");
-        double amountType = isDeposit ? parseAmount : -parseAmount;
+        double parseAmount = Console.promptForAmount("Enter " + (type == TransactionType.DEPOSIT ? "Deposit" : "Payment") + " Amount: ");
+        double amountType = (type == TransactionType.DEPOSIT) ? parseAmount : -parseAmount;
 
         System.out.println("""
                     Enter an Option:
@@ -163,12 +176,12 @@ public class Main {
         System.out.println("\t\tCustom Search Filter");
         System.out.println("Press ENTER to skip field");
 
-        LocalDate startDate = Console.promptCustomDate("Enter Start Date: ", true).minusDays(1); // true if start date filter, false if end date.
-        LocalDate endDate = Console.promptCustomDate("Enter End Date: ", false).plusDays(1); //Includes date the user entered.
-        String description = Console.promptForString("Enter Description: ").toLowerCase();
-        String vendor = Console.promptForString("Enter Vendor: ").toLowerCase();
-        double parseMin = Console.customAmount("Enter Minimum Amount: ", true);
-        double parseMax = Console.customAmount("Enter Maximum Amount: ", false);
+        LocalDate startDateFilter = Console.promptCustomDate("Enter Start Date: ", true).minusDays(1); // true if start date filter, false if end date.
+        LocalDate endDateFilter = Console.promptCustomDate("Enter End Date: ", false).plusDays(1); //Includes date the user entered.
+        String descriptionFilter = Console.promptForString("Enter Description: ").toLowerCase();
+        String vendorFilter = Console.promptForString("Enter Vendor: ").toLowerCase();
+        double parseMinFilter = Console.customAmount("Enter Minimum Amount: ", true);
+        double parseMaxFilter = Console.customAmount("Enter Maximum Amount: ", false);
         boolean isFound = false;
 
         for (Transactions t: transaction){
@@ -179,20 +192,22 @@ public class Main {
             double transactionAmount = Math.abs(t.getAmount()); // For negative transaction amounts.
 
 
-            if (transactionDate.isAfter(startDate) &&
-            transactionDate.isBefore(endDate) &&
-                    transactionDescription.contains(description) &&
-            transactionVendor.contains(vendor) &&
-                    transactionAmount >= parseMin &&
-                    transactionAmount <= parseMax){
+            if (transactionDate.isAfter(startDateFilter) &&
+            transactionDate.isBefore(endDateFilter) &&
+                    transactionDescription.contains(descriptionFilter) &&
+            transactionVendor.contains(vendorFilter) &&
+                    transactionAmount >= parseMinFilter &&
+                    transactionAmount <= parseMaxFilter){
 
                 customSearch.add(t);
                 isFound = true;
             }
         }
-        displayTransactions(customSearch);
+
         if (!isFound){
             System.out.println("No Matches Found.");
+        }else{
+            displayTransactions(customSearch);
         }
     }
     /**
@@ -211,7 +226,9 @@ public class Main {
         if (!isFound){
             System.out.println("No Matching Vendors.");
         }
+        else{
         displayTransactions(transactions);
+        }
     }
 
     /**
@@ -230,7 +247,6 @@ public class Main {
             }
         }
     }
-
 
     /**
      * Displays Current or Prior Year transactions.

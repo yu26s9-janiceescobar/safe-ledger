@@ -125,9 +125,9 @@ public class Console {
             boolean isFuture;
             LocalDateTime dateTime;
 
-            LocalDate date = promptForDate("Enter Date: ");
+            LocalDate date = promptForDate("Enter Date (YYYY-MM-DD): ");
             do {
-                LocalTime time = promptForTime("Enter Time: ");
+                LocalTime time = promptForTime("Enter Time (HH:MM): ");
                 dateTime = LocalDateTime.of(date, time);
                 isFuture = dateTime.isAfter(LocalDateTime.now());
 
