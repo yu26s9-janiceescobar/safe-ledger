@@ -10,7 +10,9 @@ public class Main {
     private enum TransactionType {
         DEPOSIT, PAYMENT
     }
-
+    private enum Report {
+        CURRENT, PRIOR
+    }
     /**
      * Entry point for program.
      * Displays Main Menu and prompts user to select an option including
@@ -63,7 +65,7 @@ public class Main {
             option = Console.promptForOptions("> ", "A", "D", "P", "R", "H");
             switch (option) {
                 case "A":
-                    displayTransactions(transaction);
+                    displayTransactionsMenu(transaction);
                     break;
                 case "D":
                     displayByTransactionType("Deposits", TransactionType.DEPOSIT);
@@ -84,7 +86,7 @@ public class Main {
     /**
      * Displays transaction either by deposit or payment type.
      * @param header the header displayed to the user.
-     * @param type true if the transaction type is deposit, false if it is payment.
+     * @param type the transaction type, deposit or payment.
      */
     private static void displayByTransactionType(String header, TransactionType type){
         ArrayList<Transactions> filter = new ArrayList<>();
@@ -94,14 +96,14 @@ public class Main {
             }
         }
         System.out.printf("%70s %n", header);
-        displayTransactions(filter);
+        displayTransactionsMenu(filter);
     }
 
     /**
      * Displays Transaction screen and prompts the user to enter information about transaction including
      * amount, custom or current date, description, and vendor of the transaction.
      * @param prompt the message displayed to the user.
-     * @param type true if type of transaction is deposit, false if it is a payment transaction.
+     * @param type the transaction type, deposit or payment.
      */
     private static void transactionScreen(String prompt, TransactionType type){
         System.out.println("\t\t" + prompt);
@@ -146,16 +148,16 @@ public class Main {
                     System.out.println("Loading Ledger Menu...");
                     break;
                 case 1:
-                    displayMonthReport("Month to Date Report", true);
+                    displayMonthReport("Month to Date Report", Report.CURRENT);
                     break;
                 case 2:
-                    displayMonthReport("Previous Month Report", false);
+                    displayMonthReport("Previous Month Report", Report.PRIOR);
                     break;
                 case 3:
-                    displayYearReport("Current Year Report", true);
+                    displayYearReport("Current Year Report", Report.CURRENT);
                     break;
                 case 4:
-                    displayYearReport("Prior Year Report", false);
+                    displayYearReport("Prior Year Report", Report.PRIOR);
                     break;
                 case 5:
                     searchByVendor();
@@ -207,7 +209,7 @@ public class Main {
         if (!isFound){
             System.out.println("No Matches Found.");
         }else{
-            displayTransactions(customSearch);
+            displayTransactionsMenu(customSearch);
         }
     }
     /**
@@ -227,19 +229,19 @@ public class Main {
             System.out.println("No Matching Vendors.");
         }
         else{
-        displayTransactions(transactions);
+            displayTransactionsMenu(transactions);
         }
     }
 
     /**
      * Displays current or prior month transactions.
      * @param prompt the header title displayed to the user.
-     * @param isCurrentMonth if true, the month will be set to current month, if false, it will be set to prior month.
+     * @param type the report type either current or prior.
      */
-    private static void displayMonthReport(String prompt, boolean isCurrentMonth){
+    private static void displayMonthReport(String prompt, Report type){
         System.out.printf("%70s %n", prompt);
         transactionHeader();
-        YearMonth filter = isCurrentMonth ? YearMonth.now() : YearMonth.now().minusMonths(1);
+        YearMonth filter = (type == Report.CURRENT) ? YearMonth.now() : YearMonth.now().minusMonths(1);
         for (Transactions t: transaction){
             YearMonth transactionMonth = YearMonth.from(t.getDateTime());
             if (filter.equals(transactionMonth)){
@@ -251,12 +253,12 @@ public class Main {
     /**
      * Displays Current or Prior Year transactions.
      * @param prompt the header title displayed to the user.
-     * @param isCurrentYear if true, year will be set to current year, if false, year will be set to prior year.
+     * @param type type the report type either current or prior.
      */
-    private static void displayYearReport(String prompt, boolean isCurrentYear){
+    private static void displayYearReport(String prompt, Report type){
         System.out.printf("%70s %n", prompt);
         transactionHeader();
-        Year year = isCurrentYear ? Year.now() : Year.now().minusYears(1);
+        Year year = (type == Report.CURRENT) ? Year.now() : Year.now().minusYears(1);
         for (Transactions t: transaction){
             Year transactionYear = Year.from(t.getDateTime());
             if (year.equals(transactionYear)){
@@ -265,16 +267,61 @@ public class Main {
         }
     }
 
+    private static int incrementPage(int currentPage){
+        // page = 1, page = 2, page = 3
+        int numOfPages = transaction.size() / 10;
+        int lastPage = (transaction.size() % 10 == 0 ) ?  numOfPages : numOfPages + 1;
+        if (currentPage < 1){
+            System.out.println("You are on the first page.");
+            return currentPage + 1;
+        }
+        if (currentPage > lastPage ){
+            System.out.println("You have reached the last page.");
+            return currentPage - 1;
+        }
+
+        System.out.println("Page " + currentPage);
+        int itemIndex = currentPage * 10;
+        if (transaction.size() <= 10){
+            for (Transactions t: transaction){
+                System.out.println(t);
+            }
+
+        }else{
+            for (int i = itemIndex - 10; i < itemIndex; i++){
+                System.out.println(transaction.get(i));
+            }
+        }
+        return currentPage;
+    }
 
     /**
      * Displays transactions to user.
      * @param transaction the transactions being displayed.
      */
-    private static void displayTransactions(ArrayList<Transactions> transaction){
-        transactionHeader();
-        for (Transactions t: transaction){
-            System.out.println(t);
-        }
+    private static void displayTransactionsMenu(ArrayList<Transactions> transaction){
+        String option;
+        int pageNum = 1;
+        incrementPage(pageNum);
+        pageNum++;
+        do{
+            option = Console.promptForOptions("[P] Previous Page [N] Next Page [X] Exit","P","N","X");
+            switch(option){
+                case "P":
+                    pageNum--;
+                    pageNum = incrementPage(pageNum);
+                    break;
+                case "N":
+                    pageNum++;
+                    pageNum = incrementPage(pageNum);
+                    break;
+                case "X":
+                    System.out.println("Returning back to Ledger Menu...");
+                    break;
+            }
+
+        }while(!option.equals("X"));
+
     }
 
     private static void transactionHeader(){
