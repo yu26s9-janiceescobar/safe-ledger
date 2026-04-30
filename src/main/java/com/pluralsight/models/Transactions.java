@@ -22,6 +22,7 @@ public class Transactions {
     public double getAmount(){
         return amount;
     }
+
     public void setAmount(double amount){
         this.amount = amount;
     }
@@ -34,6 +35,12 @@ public class Transactions {
     }
     public LocalDate getDate(){
         return dateTime.toLocalDate();
+    }
+    public LocalDateTime setTime(LocalTime time){
+        return time.atDate(dateTime.toLocalDate());
+    }
+    public LocalDateTime setDate(LocalDate date){
+        return date.atTime(dateTime.toLocalTime());
     }
 
     public LocalTime getTime(){
@@ -59,6 +66,6 @@ public class Transactions {
     public String toString(){
         DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm:ss");
-        return String.format("%-20s %-20s %-45s %-35s $%,.2f", dateTime.format(dateFmt), dateTime.format(timeFmt), description, vendor, amount);
+        return String.format("%-20s %-20s %-45s %-35s $%,.2f", this.getDate(), this.getTime(), description, vendor, amount);
     }
 }

@@ -66,7 +66,7 @@ public class DataManager {
             String line;
             FileWriter fileWriter = new FileWriter(transactionFile, true);
             BufferedWriter bufWriter = new BufferedWriter(fileWriter);
-            line = String.format("%s|%s|%s|%s|%.2f%n", dateTime.format(dateFormat), dateTime.format(timeFormat), description, vendor, amount);
+            line = String.format("%s|%s|%s|%s|%.2f%n", t.getDate(), t.getTime(), description, vendor, amount);
             bufWriter.write(line);
             bufWriter.close();
             transactions.add(t);

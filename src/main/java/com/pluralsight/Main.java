@@ -22,8 +22,8 @@ public class Main {
      * @param args not used in program.
      */
     public static void main(String[] args) {
-        System.out.printf("%35s %n","Welcome to Safe Ledger.");
-        String option = Console.promptForOptions("\t[S] START [Q] QUIT\n> ", "S", "Q");
+        System.out.printf("%35s %n%n %22s %9s %n","Welcome to Safe Ledger", "[S] Start", "[Q] Quit");
+        String option = Console.promptForOptions("> ", "S", "Q");
         switch(option){
             case "S":
                 displayMainMenu();
@@ -153,73 +153,82 @@ public class Main {
 
 
         Transactions temp = new Transactions(dateTime, formatDescription, formatVendor, parseAmount);
-        System.out.print("[Y] To Confirm " + transactionType + " [E] Edit [X] To Cancel");
-        String options = Console.promptForOptions("> ", "Y","E","X");
-        switch(options){
-            case "Y":
-                DataManager.addTransaction(dateTime, formatDescription, formatVendor, parseAmount);
-                break;
-            case "E":
-                editTransaction(temp, type);
-                break;
-            case "X":
-                break;
-        }
+        String options;
+        do {
+            System.out.println("[Y] To Confirm " + transactionType + " [E] Edit [X] To Cancel");
+            options = Console.promptForOptions("> ", "Y", "E", "X");
+
+            switch (options) {
+                case "Y":
+                    break;
+                case "E":
+                    temp = editTransaction(temp, type);
+                    break;
+                case "X":
+                    break;
+            }
+        }while(options.equals("E"));
+        DataManager.addTransaction(temp.getDateTime(), temp.getDescription(), temp.getVendor(), temp.getAmount());
 
     }
-    private static void editTransaction(Transactions temp, TransactionType type){
-        System.out.println("""
-                What Would You Like to Edit?
-                [1] Date
-                [2] Time
-                [3] Description
-                [4] Vendor
-                [5] Amount""");
+    private static Transactions editTransaction(Transactions temp, TransactionType type){
+        int option;
+        do {
+            System.out.println("""
+                    What Would You Like to Edit?
+                    [1] Date
+                    [2] Time
+                    [3] Description
+                    [4] Vendor
+                    [5] Amount
+                    [0] Done""");
 
-        int option = Console.promptForInt("> ",1,5);
-        switch(option){
-            case 1:
-                while(true) {
-                    LocalDate date = Console.promptForDate("Enter New Date: ");
-                    LocalTime time = temp.getTime();
-                    LocalDateTime dateTime = LocalDateTime.of(date, time);
-                    if (dateTime.isAfter(LocalDateTime.now())){
-                        System.out.println("Error: Date cannot be in the future.");
+            option = Console.promptForInt("> ", 0, 5);
+            switch (option) {
+                case 1:
+                    while (true) {
+                        LocalDate date = Console.promptForDate("Enter New Date: ");
+                        LocalDateTime newDateTime = LocalDateTime.of(date, temp.getTime());
+
+                        if (newDateTime.isAfter(LocalDateTime.now())) {
+                            System.out.println("Error: Date cannot be in the future.");
+                        } else {
+                            temp.setDateTime(newDateTime);
+                            break;
+                        }
                     }
-                    else{
-                        temp.setDateTime(dateTime);
-                        break;
+                    break;
+                case 2:
+                    while (true) {
+                        LocalTime time = Console.promptForTime("Enter New Time: ");
+                        LocalDateTime newDateTime = LocalDateTime.of(temp.getDate(), time);
+
+                        if (newDateTime.isAfter(LocalDateTime.now())) {
+                            System.out.println("Error: Time cannot be in the future.");
+                        } else {
+                            temp.setDateTime(newDateTime);
+                            break;
+                        }
                     }
-                }
-                break;
-            case 2:
-                while(true) {
-                    LocalTime time = Console.promptForTime("Enter New Time: ");
-                    LocalDate date = temp.getDate();
-                    LocalDateTime dateTime = LocalDateTime.of(date, time);
-                    if (dateTime.isAfter(LocalDateTime.now())){
-                        System.out.println("Error: Time cannot be in the future.");
-                    }
-                    else{
-                        temp.setDateTime(dateTime);
-                        break;
-                    }
-                }
-                break;
-            case 3:
-                String description = Console.promptForStringWithCharacterLimit("Enter New Description: ", DESCRIPTION_MAX_CHARACTER_COUNT);
-                temp.setDescription(description);
-                break;
-            case 4:
-                String vendor = Console.characterCountLimit("Enter New Vendor: ", VENDOR_MAX_CHARACTER_COUNT);
-                temp.setVendor(vendor);
-                break;
-            case 5:
-                double amount = Console.promptForAmount("Enter New Amount: ");
-                double parseAmount = (type == TransactionType.DEPOSIT) ? amount : -amount;
-                temp.setAmount(parseAmount);
-                break;
-        }
+                    break;
+                case 3:
+                    String description = Console.promptForStringWithCharacterLimit("Enter New Description: ", DESCRIPTION_MAX_CHARACTER_COUNT);
+                    String formatDescription = Console.capitalizeFirstLetter(description);
+                    temp.setDescription(formatDescription);
+                    break;
+                case 4:
+                    String vendor = Console.promptForStringWithCharacterLimit("Enter New Vendor: ", VENDOR_MAX_CHARACTER_COUNT);
+                    String formatVendor = Console.capitalizeFirstOfEveryWord(vendor);
+                    temp.setVendor(formatVendor);
+                    break;
+                case 5:
+                    double amount = Console.promptForAmount("Enter New Amount: ");
+                    double parseAmount = (type == TransactionType.DEPOSIT) ? amount : -amount;
+                    temp.setAmount(parseAmount);
+                    break;
+            }
+        }while (option != 0);
+        return temp;
 
     }
 
