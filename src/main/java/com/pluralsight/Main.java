@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 public class Main {
     private static final ArrayList<Transactions> transaction = DataManager.loadTransactions();
+    private static final int DESCRIPTION_MAX_CHARACTER_COUNT = 35;
+    private static final int VENDOR_MAX_CHARACTER_COUNT = 25;
     private enum TransactionType {
         DEPOSIT, PAYMENT
     }
@@ -37,22 +39,25 @@ public class Main {
      * add deposit, add payment, go to ledger menu, or exit program.
      */
     private static void displayMainMenu(){
+        System.out.println("Starting Program...");
         String option;
         do {
+
             System.out.println("""
-                \t\t\tMain Menu
-                \t\t[A] Add Deposit
-                \t\t[P] Make a Payment
-                \t\t[L] Ledger
-                \t\t[X] Exit""");
+                \t\tMain Menu
+                \t[A] Add Deposit
+                \t[P] Make a Payment
+                \t[L] Ledger
+                \t[X] Exit""");
+
 
             option = Console.promptForOptions("> ", "A","P","L","X");
             switch (option) {
                 case "A":
-                    transactionScreen("Deposit Screen", TransactionType.DEPOSIT);
+                    transactionScreen(TransactionType.DEPOSIT);
                     break;
                 case "P":
-                    transactionScreen("Payment Screen", TransactionType.PAYMENT);
+                    transactionScreen(TransactionType.PAYMENT);
                     break;
                 case "L":
                     ledgerMenu();
@@ -72,28 +77,28 @@ public class Main {
         String option;
         do {
             System.out.println("""
-                \t\t\tLedger Menu
-                \t\t[A] Display All Entries
-                \t\t[D] Display Deposits
-                \t\t[P] Display Payments
-                \t\t[R] Reports
-                \t\t[H] Home Screen""");
+                \t\tLedger Menu
+                \t[A] Display All Entries
+                \t[D] Display Deposits
+                \t[P] Display Payments
+                \t[R] Reports
+                \t[H] Home Screen""");
+
             option = Console.promptForOptions("> ", "A", "D", "P", "R", "H");
             switch (option) {
                 case "A":
                     displayTransactionsMenu(transaction);
                     break;
                 case "D":
-                    displayByTransactionType("Deposits", TransactionType.DEPOSIT);
+                    displayByTransactionType(TransactionType.DEPOSIT);
                     break;
                 case "P":
-                    displayByTransactionType("Payments", TransactionType.PAYMENT);
+                    displayByTransactionType(TransactionType.PAYMENT);
                     break;
                 case "R":
                     reportMenu();
                     break;
                 case "H":
-                    System.out.println("Loading Home Screen...");
                     break;
             }
         }while(!option.equals("H"));
@@ -101,10 +106,9 @@ public class Main {
 
     /**
      * Displays transaction either by deposit or payment type.
-     * @param header the header displayed to the user.
      * @param type the transaction type, deposit or payment.
      */
-    private static void displayByTransactionType(String header, TransactionType type){
+    private static void displayByTransactionType(TransactionType type){
         ArrayList<Transactions> filter = new ArrayList<>();
         for (Transactions t: transaction){
             if ( type == TransactionType.DEPOSIT ? t.getAmount() > 0: t.getAmount() < 0 ){
@@ -118,26 +122,29 @@ public class Main {
     /**
      * Displays Transaction screen and prompts the user to enter information about transaction including
      * amount, custom or current date, description, and vendor of the transaction.
-     * @param prompt the message displayed to the user.
      * @param type the transaction type, deposit or payment.
      */
-    private static void transactionScreen(String prompt, TransactionType type){
-        System.out.println("\t\t" + prompt);
-        double parseAmount = Console.promptForAmount("Enter " + (type == TransactionType.DEPOSIT ? "Deposit" : "Payment") + " Amount: ");
+    private static void transactionScreen(TransactionType type){
+        String transactionType = type == TransactionType.DEPOSIT ? "Deposit" : "Payment";
+        System.out.println(transactionType + " Screen ");
+
+        double parseAmount = Console.promptForAmount("Enter " + transactionType + " Amount: ");
         double amountType = (type == TransactionType.DEPOSIT) ? parseAmount : -parseAmount;
 
         System.out.println("""
-                    Enter an Option:
+                    \t\tEnter an Option:
                     \t[1] Custom Date and Time
                     \t[2] Current Date and Time""");
 
         int option = Console.promptForInt("> ", 1, 2);
         LocalDateTime dateTime = (option == 1) ? Console.promptForDateTime() : LocalDateTime.now();
 
-        String description = Console.promptForString("Enter Description: ");
+        String description = Console.promptForStringWithCharacterLimit("Enter Description: ", DESCRIPTION_MAX_CHARACTER_COUNT);
         String formatDescription = Console.capitalizeFirstLetter(description);
-        String vendor = Console.promptForString("Enter vendor: ");
+        String vendor = Console.promptForStringWithCharacterLimit("Enter vendor: ", VENDOR_MAX_CHARACTER_COUNT);
         String formatVendor = Console.capitalizeFirstOfEveryWord(vendor);
+
+        System.out.println("[Y] To Confirm " + transactionType + " [E] Edit [X] To Cancel");
 
         DataManager.addTransaction(dateTime, formatDescription, formatVendor, amountType);
     }
@@ -150,7 +157,7 @@ public class Main {
     private static void reportMenu(){
         int option;
         do{
-            System.out.println("""
+            System.out.print(""" 
                 \t\tReports Menu
                 \t[1] Month to Date
                 \t[2] Previous Month
@@ -159,11 +166,11 @@ public class Main {
                 \t[5] Search by Vendor
                 \t[6] Custom Search
                 \t[0] Back to Ledger Menu""");
+            System.out.println("=".repeat(146));
 
             option = Console.promptForInt("> ", 0, 6);
             switch(option){
                 case 0:
-                    System.out.println("Loading Ledger Menu...");
                     break;
                 case 1:
                     displayMonthReport("Month to Date Report", Report.CURRENT);
@@ -198,8 +205,8 @@ public class Main {
 
         LocalDate startDateFilter = Console.promptCustomDate("Enter Start Date: ", true).minusDays(1); // true if start date filter, false if end date.
         LocalDate endDateFilter = Console.promptCustomDate("Enter End Date: ", false).plusDays(1); //Includes date the user entered.
-        String descriptionFilter = Console.promptForString("Enter Description: ").toLowerCase();
-        String vendorFilter = Console.promptForString("Enter Vendor: ").toLowerCase();
+        String descriptionFilter = Console.promptForStringWithCharacterLimit("Enter Description: ", DESCRIPTION_MAX_CHARACTER_COUNT).toLowerCase();
+        String vendorFilter = Console.promptForStringWithCharacterLimit("Enter Vendor: ", VENDOR_MAX_CHARACTER_COUNT).toLowerCase();
         double parseMinFilter = Console.customAmount("Enter Minimum Amount: ", true);
         double parseMaxFilter = Console.customAmount("Enter Maximum Amount: ", false);
 
@@ -302,9 +309,10 @@ public class Main {
             return currentPage - 1;
         }
 
-        System.out.println("Page " + currentPage);
-        System.out.printf("%-20s %-20s %-45s %-30s %s %n", "Date", "Time", "Description", "Vendor", "Amount");
-        System.out.println("-".repeat(140));
+        System.out.printf("%75s %d %n","page", currentPage);
+        System.out.printf("%-20s %-20s %-45s %-35s %s %n", "Date", "Time", "Description", "Vendor", "Amount");
+
+        System.out.println("=".repeat(145));
         for (int i = previousTransactionsDisplayed; i < previousTransactionsDisplayed + 10 ; i++){
             System.out.println(transaction.get(i));
             transactionsLeft--;
@@ -325,8 +333,10 @@ public class Main {
 
         displayPage(pageNum, transaction);
         do{
-            System.out.println("[P] Previous Page [N] Next Page [X] Exit");
-            option = Console.promptForOptions(">","P","N","X");
+            System.out.print("=".repeat(51));
+            System.out.print(" [P] Previous Page [N] Next Page [X] Exit ");
+            System.out.println("=".repeat(53));
+            option = Console.promptForOptions("> ","P","N","X");
             switch(option){
                 case "P":
                     pageNum--;
@@ -337,7 +347,6 @@ public class Main {
                     pageNum = displayPage(pageNum, transaction);
                     break;
                 case "X":
-                    System.out.println("Returning back to Menu...");
                     break;
             }
 

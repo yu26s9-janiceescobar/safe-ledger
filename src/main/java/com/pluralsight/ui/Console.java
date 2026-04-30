@@ -10,7 +10,7 @@ public class Console {
     private final static LocalDate MIN_DATE = LocalDate.parse("1970-01-01");
     private final static double MAX_AMOUNT = 999_999_999.99;
     private final static double MIN_AMOUNT = 0.01;
-    
+
     /**
      * Prompts user to enter a string.
      * @param prompt the message displayed to the user.
@@ -21,6 +21,27 @@ public class Console {
         String userInput = scanner.nextLine().strip();
         return userInput.replaceAll("\\s+"," ");
     }
+
+    public static String promptForStringWithCharacterLimit(String prompt, int characterCount){
+        while(true){
+            String input = promptForString(prompt);
+            try{
+                return characterCountLimit(input, characterCount);
+            }catch(IllegalArgumentException e){
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+    public static String characterCountLimit(String input, int characterCount){
+        if (characterCount == 0){
+            throw new RuntimeException("Error: Character Count Cannot be Set to 0.");
+        }
+        if (input.length() > characterCount){
+            throw new IllegalArgumentException("Error: Character Count Cannot Exceed " + characterCount);
+        }
+        return input;
+    }
+
     /**
      * Capitalizes the first letter of the first word of a string.
      * @param input the string entered.
@@ -75,8 +96,10 @@ public class Console {
                 }
                 if (amountInput.contains(".")){
                     String[] decimalPlaces = amountInput.split("\\.");
-                    if (decimalPlaces[1].length() > 2) {
-                        throw new IllegalArgumentException("Error: Amount cannot be more than two decimal places.");
+                    if (decimalPlaces.length != 1) {
+                        if (decimalPlaces[1].length() > 2) {
+                            throw new IllegalArgumentException("Error: Amount cannot be more than two decimal places.");
+                        }
                     }
                 }
                 return parseAmount;
