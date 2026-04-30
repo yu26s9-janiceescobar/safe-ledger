@@ -87,7 +87,7 @@ public class Main {
             option = Console.promptForOptions("> ", "A", "D", "P", "R", "H");
             switch (option) {
                 case "A":
-                    displayTransactionsMenu(transaction);
+                    displayAllTransactions();
                     break;
                 case "D":
                     displayByTransactionType(TransactionType.DEPOSIT);
@@ -105,6 +105,12 @@ public class Main {
     }
 
     /**
+     * Displays all transactions.
+     */
+    private static void displayAllTransactions(){
+        transactionExists("ALL TRANSACTIONS", transaction);
+    }
+    /**
      * Displays transaction either by deposit or payment type.
      * @param type the transaction type, deposit or payment.
      */
@@ -115,7 +121,8 @@ public class Main {
                 filter.add(t);
             }
         }
-        displayFilteredTransaction(filter);
+        String header = type == TransactionType.DEPOSIT ? "DEPOSIT REPORT" : "PAYMENT REPORT";
+        transactionExists(header, filter);
 
     }
 
@@ -126,7 +133,7 @@ public class Main {
      */
     private static void transactionScreen(TransactionType type){
         String transactionType = type == TransactionType.DEPOSIT ? "Deposit" : "Payment";
-        System.out.println(transactionType + " Screen ");
+        System.out.println("\t\t" + transactionType + " Screen");
 
         double parseAmount = Console.promptForAmount("Enter " + transactionType + " Amount: ");
         double amountType = (type == TransactionType.DEPOSIT) ? parseAmount : -parseAmount;
@@ -157,7 +164,7 @@ public class Main {
     private static void reportMenu(){
         int option;
         do{
-            System.out.print(""" 
+            System.out.println(""" 
                 \t\tReports Menu
                 \t[1] Month to Date
                 \t[2] Previous Month
@@ -166,23 +173,22 @@ public class Main {
                 \t[5] Search by Vendor
                 \t[6] Custom Search
                 \t[0] Back to Ledger Menu""");
-            System.out.println("=".repeat(146));
 
             option = Console.promptForInt("> ", 0, 6);
             switch(option){
                 case 0:
                     break;
                 case 1:
-                    displayMonthReport("Month to Date Report", Report.CURRENT);
+                    displayMonthReport(Report.CURRENT);
                     break;
                 case 2:
-                    displayMonthReport("Previous Month Report", Report.PRIOR);
+                    displayMonthReport(Report.PRIOR);
                     break;
                 case 3:
-                    displayYearReport("Current Year Report", Report.CURRENT);
+                    displayYearReport(Report.CURRENT);
                     break;
                 case 4:
-                    displayYearReport("Prior Year Report", Report.PRIOR);
+                    displayYearReport(Report.PRIOR);
                     break;
                 case 5:
                     searchByVendor();
@@ -201,7 +207,7 @@ public class Main {
     private static void customSearchScreen(){
         ArrayList<Transactions> customSearch = new ArrayList<>();
         System.out.println("\t\tCustom Search Filter");
-        System.out.println("Press ENTER to skip field");
+        System.out.println("Leave Blank to Skip Field.");
 
         LocalDate startDateFilter = Console.promptCustomDate("Enter Start Date: ", true).minusDays(1); // true if start date filter, false if end date.
         LocalDate endDateFilter = Console.promptCustomDate("Enter End Date: ", false).plusDays(1); //Includes date the user entered.
@@ -231,7 +237,7 @@ public class Main {
             }
         }
 
-        displayFilteredTransaction(customSearch);
+        transactionExists("CUSTOM SEARCH APPLIED", customSearch);
     }
     /**
      * Lets user search by vendor name.
@@ -246,18 +252,16 @@ public class Main {
 
             }
         }
-        displayFilteredTransaction(filter);
+        transactionExists("VENDOR: " + vendor.toUpperCase(), filter);
     }
 
     /**
      * Displays current or prior month transactions.
-     * @param prompt the header title displayed to the user.
      * @param type the report type either current or prior.
      */
-    private static void displayMonthReport(String prompt, Report type){
-        System.out.printf("%70s %n", prompt);
+    private static void displayMonthReport(Report type){
         ArrayList<Transactions> filter = new ArrayList<>();
-
+        String header = type == Report.CURRENT ? "CURRENT MONTH REPORT" : "PRIOR MONTH REPORT";
         YearMonth yearMonth = (type == Report.CURRENT) ? YearMonth.now() : YearMonth.now().minusMonths(1);
         for (Transactions t: transaction){
             YearMonth transactionMonth = YearMonth.from(t.getDateTime());
@@ -265,18 +269,16 @@ public class Main {
                 filter.add(t);
             }
         }
-        displayFilteredTransaction(filter);
+        transactionExists(header, filter);
     }
 
     /**
      * Displays Current or Prior Year transactions.
-     * @param prompt the header title displayed to the user.
      * @param type type the report type either current or prior.
      */
-    private static void displayYearReport(String prompt, Report type){
-        System.out.printf("%70s %n", prompt);
+    private static void displayYearReport(Report type){
         ArrayList<Transactions> filter = new ArrayList<>();
-
+        String header = type == Report.CURRENT ? "CURRENT YEAR REPORT" : "PRIOR YEAR REPORT";
         Year year = (type == Report.CURRENT) ? Year.now() : Year.now().minusYears(1);
         for (Transactions t: transaction){
             Year transactionYear = Year.from(t.getDateTime());
@@ -284,33 +286,44 @@ public class Main {
                 filter.add(t);
             }
         }
-        displayFilteredTransaction(filter);
+        transactionExists(header, filter);
     }
 
-
-    private static void displayFilteredTransaction(ArrayList<Transactions> transaction){
+    /**
+     * Displays transactions if transactions are found.
+     * @param header the title of the page.
+     * @param transaction the list of transactions.
+     */
+    private static void transactionExists(String header, ArrayList<Transactions> transaction){
         if (transaction.isEmpty()) {
-            System.out.print("No Transactions Found");
+            System.out.print("No Transactions Found.");
         } else {
-            displayTransactionsMenu(transaction);
+            displayTransactionsMenu(header, transaction);
         }
     }
-    private static int displayPage(int currentPage, ArrayList<Transactions> transaction){
+
+    /**
+     * Displays transaction page with a maximum of 10 transactions.
+     * @param currentPage the current page number.
+     * @param header the title of the page.
+     * @param transaction the list of transactions.
+     * @return int the page number.
+     */
+    private static int displayPage(int currentPage, String header, ArrayList<Transactions> transaction){
         int previousTransactionsDisplayed = (currentPage * 10) - 10;
         int lastPage = (transaction.size() % 10 == 0 ) ?  transaction.size() / 10 : transaction.size() / 10 + 1;
         int transactionsLeft = transaction.size() - previousTransactionsDisplayed;
-
         if (currentPage < 1){
             System.out.println("You are on the first page.");
             return currentPage + 1;
         }
-        if (currentPage > lastPage ){
+        else if (currentPage > lastPage ){
             System.out.println("You have reached the last page.");
             return currentPage - 1;
         }
 
-        System.out.printf("%75s %d %n","page", currentPage);
-        System.out.printf("%-20s %-20s %-45s %-35s %s %n", "Date", "Time", "Description", "Vendor", "Amount");
+        System.out.printf("%75s %d %n","PAGE", currentPage);
+        System.out.printf("%81s %n%-20s %-20s %-45s %-35s %s %n", header, "DATE", "TIME", "DESCRIPTION", "VENDOR", "AMOUNT");
 
         System.out.println("=".repeat(145));
         for (int i = previousTransactionsDisplayed; i < previousTransactionsDisplayed + 10 ; i++){
@@ -327,24 +340,24 @@ public class Main {
      * Displays transactions to user.
      * @param transaction the transactions being displayed.
      */
-    private static void displayTransactionsMenu(ArrayList<Transactions> transaction){
+    private static void displayTransactionsMenu(String header, ArrayList<Transactions> transaction){
         String option;
         int pageNum = 1;
 
-        displayPage(pageNum, transaction);
+        displayPage(pageNum, header, transaction);
         do{
             System.out.print("=".repeat(51));
-            System.out.print(" [P] Previous Page [N] Next Page [X] Exit ");
+            System.out.print(" [P] PREVIOUS PAGE [N] NEXT PAGE [X] EXIT ");
             System.out.println("=".repeat(53));
             option = Console.promptForOptions("> ","P","N","X");
             switch(option){
                 case "P":
                     pageNum--;
-                    pageNum = displayPage(pageNum, transaction);
+                    pageNum = displayPage(pageNum, header, transaction);
                     break;
                 case "N":
                     pageNum++;
-                    pageNum = displayPage(pageNum, transaction);
+                    pageNum = displayPage(pageNum, header, transaction);
                     break;
                 case "X":
                     break;
