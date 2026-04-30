@@ -8,9 +8,9 @@ import java.util.*;
 public class Console {
     private final static Scanner scanner = new Scanner(System.in);
     private final static LocalDate MIN_DATE = LocalDate.parse("1970-01-01");
-    private final static double MAX_AMOUNT = 999999999.99;
-    private final static double MIN_AMOUNT = 0.0;
-
+    private final static double MAX_AMOUNT = 999_999_999.99;
+    private final static double MIN_AMOUNT = 0.01;
+    
     /**
      * Prompts user to enter a string.
      * @param prompt the message displayed to the user.
@@ -18,9 +18,32 @@ public class Console {
      */
     public static String promptForString(String prompt){
         System.out.print(prompt);
-        return scanner.nextLine().strip();
+        String userInput = scanner.nextLine().strip();
+        return userInput.replaceAll("\\s+"," ");
+    }
+    /**
+     * Capitalizes the first letter of the first word of a string.
+     * @param input the string entered.
+     * @return String the string with the first letter of the word capitalized.
+     */
+    public static String capitalizeFirstLetter(String input){
+        return input.substring(0,1).toUpperCase() + input.substring(1);
     }
 
+    /**
+     * Capitalizes every first letter of a word in a string.
+     * @param input the string entered.
+     * @return String the string with the first letter of every word capitalized.
+     */
+    public static String capitalizeFirstOfEveryWord(String input){
+        String[] words = input.split(" ");
+        StringBuilder formatSentence = new StringBuilder();
+        for (String w: words){
+            String newWord = capitalizeFirstLetter(w) + " ";
+            formatSentence.append(newWord);
+        }
+        return formatSentence.toString().strip();
+    }
     /**
      * Prompts the user for currency amount and returns parsed double.
      * @param prompt the message displayed to the user.
@@ -47,8 +70,8 @@ public class Console {
             try {
                 double parseAmount = Double.parseDouble(amountInput);
 
-                if (parseAmount <= MIN_AMOUNT || parseAmount >= MAX_AMOUNT ){
-                    throw new IllegalArgumentException("Error: Amount has to be between " + MIN_AMOUNT + " and " + MAX_AMOUNT);
+                if (parseAmount < MIN_AMOUNT || parseAmount > MAX_AMOUNT ){
+                    throw new IllegalArgumentException("Error: Amount has to be between $0.01 and $999,999,999.99");
                 }
                 if (amountInput.contains(".")){
                     String[] decimalPlaces = amountInput.split("\\.");
@@ -92,13 +115,12 @@ public class Console {
             System.out.print(prompt);
             String userInput = scanner.nextLine().strip().toUpperCase();
             for (String option : options) {
-                if (userInput.equals(option)) {
+                if (userInput.equals(option.toUpperCase())){//In case I forget to make options uppercase
                     return userInput;
                 }
             }
             System.out.println("Error: Invalid Input. Please Try Again.");
         }
-
     }
 
     /**
@@ -127,7 +149,7 @@ public class Console {
 
             LocalDate date = promptForDate("Enter Date (YYYY-MM-DD): ");
             do {
-                LocalTime time = promptForTime("Enter Time (HH:MM): ");
+                LocalTime time = promptForTime("Enter Time (24:00): ");
                 dateTime = LocalDateTime.of(date, time);
                 isFuture = dateTime.isAfter(LocalDateTime.now());
 

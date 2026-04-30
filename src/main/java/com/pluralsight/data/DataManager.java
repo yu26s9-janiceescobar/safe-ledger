@@ -15,7 +15,10 @@ public class DataManager {
     private static final String transactionFile = "data/transactions.csv";
     private static final ArrayList<Transactions> transactions = new ArrayList<>();
 
-
+    /**
+     * loads transactions from a preloaded file and adds it to a list of Transactions.
+     * @return the list of transactions from the file.
+     */
     public static ArrayList<Transactions> loadTransactions(){
         try {
             FileReader fileReader = new FileReader(transactionFile);
@@ -25,6 +28,9 @@ public class DataManager {
 
             String line;
             while((line = bufReader.readLine()) != null){
+                if (line.isBlank()){
+                    continue; // avoids blank line errors
+                }
                 String[] t = line.split("\\|");
                 LocalDate date = LocalDate.parse(t[0]);
                 LocalTime time = LocalTime.parse(t[1]);
@@ -43,17 +49,24 @@ public class DataManager {
         return transactions;
     }
 
+    /**
+     * Creates a new Transaction and saves it to a file.
+     * @param dateTime the date and time of transaction.
+     * @param description the description of the transaction.
+     * @param vendor the vendor of the transaction.
+     * @param amount the amount of transaction.
+     */
     public static void addTransaction(LocalDateTime dateTime, String description, String vendor, double amount){
         Transactions t = new Transactions(dateTime, description, vendor, amount);
 
         DateTimeFormatter dateFormat =  DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Takes the date part of the DateTime object
         DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss"); // Takes the time part of the DateTime object.
+
         try {
             String line;
             FileWriter fileWriter = new FileWriter(transactionFile, true);
             BufferedWriter bufWriter = new BufferedWriter(fileWriter);
-            line = String.format("%s|%s|%s|%s|%.2f", dateTime.format(dateFormat), dateTime.format(timeFormat), description, vendor, amount);
-            bufWriter.newLine();
+            line = String.format("%s|%s|%s|%s|%.2f %n", dateTime.format(dateFormat), dateTime.format(timeFormat), description, vendor, amount);
             bufWriter.write(line);
             bufWriter.close();
             transactions.add(t);

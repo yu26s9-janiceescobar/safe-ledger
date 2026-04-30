@@ -1,79 +1,22 @@
 date|time|description|vendor|amount
-2023-01-05|09:10:00|Bulk cleanser inventory purchase|DermSupply Co|-1200.00
-2023-01-05|11:30:00|Retail order - vitamin C serum|Shopify Store|85.50
-2023-01-10|13:15:00|Invoice 3001 paid - spa wholesale order|Glow Beauty Spa|1600.00
-2023-01-12|10:00:00|Payroll - skincare technician|Internal Payroll|-800.00
-2023-01-15|14:20:00|Retail order - hydrating moisturizer|Amazon|42.99
-2023-01-18|09:30:00|Business insurance payment|Allied Insurance|-320.00
-2023-01-22|12:00:00|Wholesale order - toner bulk|SkinCare Distributors|1100.00
-2023-01-25|15:40:00|Sales tax payment|State Tax Dept|-210.00
-2023-02-03|10:10:00|Retail order - exfoliating scrub|Shopify Store|67.25
-2023-02-26|15:10:00|Retail order - retinol cream|Shopify Store|78.30
-2023-03-02|09:05:00|Invoice 3003 paid - spa order|Glow Beauty Spa|2100.00
-2023-03-05|11:00:00|Payroll - consultant|Internal Payroll|-850.00
-2023-03-08|13:40:00|Retail order - sunscreen SPF50|Amazon|39.99
-2023-03-12|10:30:00|Bulk facial oils purchase|BeautyWarehouse Inc|-890.25
-2023-03-15|12:10:00|Retail order - face serum|Shopify Store|95.00
-2023-03-18|14:45:00|Utility bill - electricity|City Utilities|-220.75
-2023-03-22|09:50:00|Wholesale order - acne kits|SkinCare Distributors|-1350.00
-2023-03-28|15:20:00|Invoice 3004 paid - spa supply|Luxe Skin Spa|2400.00
-2023-04-03|10:00:00|Retail order - clay mask set|Amazon|62.00
-2023-05-12|10:10:00|Invoice 3006 paid - spa restock|Luxe Skin Spa|1950.00
-2023-05-15|12:50:00|Marketing ads|Google Ads|-180.00
-2023-05-18|14:20:00|Retail order - anti-aging serum|Amazon|95.00
-2023-05-22|09:40:00|Wholesale order - toner|DermSupply Co|-1200.00
-2023-05-28|15:00:00|Invoice 3007 paid - spa order|Glow Beauty Spa|2200.00
-2023-06-03|10:00:00|Retail order - cleanser set|Amazon|55.00
-2023-06-06|11:20:00|Payroll - consultant|Internal Payroll|-850.00
-2023-06-09|13:15:00|Wholesale order - facial kits|SkinCare Distributors|1300.00
-2023-06-12|15:45:00|Utility bill|City Utilities|-210.00
-2023-06-15|09:30:00|Retail order - sunscreen|Shopify Store|39.99
-2023-06-18|12:10:00|Invoice 3008 paid - spa order|Glow Beauty Spa|2100.00
+2023-06-15|09:30:40|Retail order - sunscreen|Shopify Store|39.99
+2023-06-18|12:10:38|Invoice 3008 paid - spa order|Glow Beauty Spa|2100.00
 2023-06-22|14:40:00|Bulk inventory purchase|DermSupply Co|-1100.00
-2023-06-28|10:55:00|Retail order - serum|Amazon|78.00
-2023-07-03|09:10:00|Payroll - staff|Internal Payroll|-600.00
-2023-07-06|11:35:00|Retail order - moisturizer|Shopify Store|45.99
+2023-07-06|11:35:01|Retail order - moisturizer|Shopify Store|45.99
 2023-07-09|13:20:00|Wholesale order - acne kits|SkinCare Distributors|-1350.00
-2023-07-12|15:00:00|Invoice 3009 paid - spa supply|Luxe Skin Spa|2300.00
-2023-07-15|10:25:00|Marketing - influencer campaign|Meta Ads|-300.00
-2023-07-18|12:45:00|Retail order - scrub|Amazon|67.25
-2023-07-22|14:10:00|Wholesale order - toner bulk|DermSupply Co|1200.00
-2023-07-28|09:50:00|Invoice 3010 paid - spa order|Glow Beauty Spa|2000.00
-2023-08-02|10:00:00|Retail order - vitamin C serum|Shopify Store|85.50
-2023-08-05|11:30:00|Payroll|Internal Payroll|-800.00
-2023-08-08|13:00:00|Wholesale order - sunscreen|BeautyWarehouse Inc|-980.40
-2023-08-12|15:20:00|Retail order - cleanser|Amazon|42.99
-2023-08-15|09:40:00|Invoice 3011 paid - spa order|Glow Beauty Spa|1750.00
-2023-08-18|12:10:00|Utility bill|City Utilities|-220.75
-2023-08-22|14:30:00|Wholesale order - facial kits|DermSupply Co|1250.00
-2023-08-28|10:15:00|Retail order - glow kit|Shopify Store|88.00
-2023-09-03|09:20:00|Invoice 3012 paid - spa restock|Luxe Skin Spa|2400.00
-2023-09-06|11:10:00|Payroll - assistant|Internal Payroll|-600.00
-2023-09-09|13:50:00|Retail order - serum|Amazon|95.00
-2023-09-12|15:10:00|Wholesale order - toner|SkinCare Distributors|-1200.00
-2025-09-15|10:30:00|Marketing ads|Google Ads|-180.00
-2025-09-18|12:40:00|Retail order - sunscreen|Shopify Store|39.99
-2025-09-22|14:50:00|Wholesale order - acne kits|DermSupply Co|1300.00
+2024-08-05|11:30:00|Payroll|Internal Payroll|-800.00
+2024-08-08|13:00:00|Wholesale order - sunscreen|BeautyWarehouse Inc|-980.40
 2025-09-28|09:45:00|Invoice 3013 paid - spa order|Glow Beauty Spa|2100.00
-2025-10-03|10:05:00|Retail order - cleanser set|Amazon|55.00
-2025-10-06|11:25:00|Payroll - staff|Internal Payroll|-500.00
+2025-10-03|14:05:20|Retail order - cleanser set|Amazon|55.00
+2025-10-06|18:25:00|Payroll - staff|Internal Payroll|-500.00
 2025-10-18|12:20:00|Utility bill|City Utilities|-210.00
-2026-10-22|14:05:00|Wholesale order - toner bulk|DermSupply Co|1200.00
-2026-03-28|10:40:00|Retail order - serum|Amazon|78.00
-2026-03-03|09:30:00|Invoice 3015 paid - spa supply|Luxe Skin Spa|1950.00
-2026-03-06|11:50:00|Payroll - consultant|Internal Payroll|-850.00
+2026-10-22|14:05:40|Wholesale order - toner bulk|DermSupply Co|1200.00
+2026-03-03|09:30:06|Invoice 3015 paid - spa supply|Luxe Skin Spa|1950.00
+2026-03-06|11:50:01|Payroll - consultant|Internal Payroll|-850.00
 2026-03-09|13:10:00|Retail order - moisturizer|Shopify Store|45.99
-2026-03-12|15:30:00|Wholesale order - facial kits|SkinCare Distributors|-1350.00
-2020-04-03|12:00:00|janice|janice|1200.00
-2026-04-02|13:45:00|janice|janice|1200.00
-2026-04-28|00:10:35|janice|janice|-2000.00
-2026-04-28|09:05:27|de|123|100.00
-2026-04-28|09:05:41|ewrfw|sga|-2000.00
-2026-04-28|09:30:26|karen|pwadef|0.01
-2026-04-28|09:32:45|asjf|sdaf|-900.00
-2026-04-28|11:20:20|Cash deposit|found|50.00
-2026-04-28|11:22:53|new|new|100.00
-2025-07-24|12:00:00|zelle|zelle|400.00
-2026-04-29|12:53:54|janice|janice|0.01
-2020-02-01|12:00:00|janice|jnaice|12.00
-2020-01-01|12:00:00|janice|amazon|213.23
+2026-03-12|15:30:00|Wholesale order - facial kits|Skincare Distributors|-1350.00
+2026-04-01|07:34:10|Retail order - vitamin c serum|Amazon|-5000.00
+2026-04-09|02:50:54|Invoice 3019 - spa order|Luxe Skin Spa|3000.00
+2026-04-30|12:36:14|Wholesale order - face mask|Skincare Distributors|-800.00
+2025-04-30|13:06:00|Skin care order|Wholesale Supplier|150.00 
+2026-04-30|12:00:00|Shampoo and conditioner|Haircare Supplier|-500.54

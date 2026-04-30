@@ -13,41 +13,57 @@ public class Main {
     private enum Report {
         CURRENT, PRIOR
     }
+
     /**
      * Entry point for program.
-     * Displays Main Menu and prompts user to select an option including
-     * add deposit, add payment, go to ledger menu, or exit program.
+     * Prompts user to start or quit program.
      * @param args not used in program.
      */
-    public static void main(String[] args){
-            String option;
-            do {
-                System.out.println("""
-                \t\tMain Menu
-                \t[A] Add Deposit
-                \t[P] Make a Payment
-                \t[L] Ledger
-                \t[X] Exit""");
-
-                option = Console.promptForOptions("> ", "A","P","L","X");
-                switch (option) {
-                    case "A":
-                        transactionScreen("Deposit Screen", TransactionType.DEPOSIT);
-                        break;
-                    case "P":
-                        transactionScreen("Payment Screen", TransactionType.PAYMENT);
-                        break;
-                    case "L":
-                        ledgerMenu();
-                        break;
-                    case "X":
-                        System.out.println("Exiting Application...");
-                        break;
-                }
-            }
-            while(!option.equals("X"));
+    public static void main(String[] args) {
+        System.out.printf("%35s %n","Welcome to Safe Ledger.");
+        String option = Console.promptForOptions("\t[S] Start Application [Q] Quit Application\n> ", "S", "Q");
+        switch(option){
+            case "S":
+                displayMainMenu();
+                break;
+            case "Q":
+                System.out.println("Exiting Application...");
+                break;
+        }
     }
 
+    /**
+     * Displays Main Menu and prompts user to select an option including
+     * add deposit, add payment, go to ledger menu, or exit program.
+     */
+    private static void displayMainMenu(){
+        String option;
+        do {
+            System.out.println("""
+                \t\t\tMain Menu
+                \t\t[A] Add Deposit
+                \t\t[P] Make a Payment
+                \t\t[L] Ledger
+                \t\t[X] Exit""");
+
+            option = Console.promptForOptions("> ", "A","P","L","X");
+            switch (option) {
+                case "A":
+                    transactionScreen("Deposit Screen", TransactionType.DEPOSIT);
+                    break;
+                case "P":
+                    transactionScreen("Payment Screen", TransactionType.PAYMENT);
+                    break;
+                case "L":
+                    ledgerMenu();
+                    break;
+                case "X":
+                    System.out.println("Exiting Application...");
+                    break;
+            }
+        }
+        while(!option.equals("X"));
+    }
     /**
      * Displays ledger menu and prompts user to select an option including
      * display all entries, display deposits, display payments, reports, and return to home screen.
@@ -56,12 +72,12 @@ public class Main {
         String option;
         do {
             System.out.println("""
-                \t\tLedger Menu
-                \t[A] Display All Entries
-                \t[D] Display Deposits
-                \t[P] Display Payments
-                \t[R] Reports
-                \t[H] Home Screen""");
+                \t\t\tLedger Menu
+                \t\t[A] Display All Entries
+                \t\t[D] Display Deposits
+                \t\t[P] Display Payments
+                \t\t[R] Reports
+                \t\t[H] Home Screen""");
             option = Console.promptForOptions("> ", "A", "D", "P", "R", "H");
             switch (option) {
                 case "A":
@@ -95,11 +111,7 @@ public class Main {
                 filter.add(t);
             }
         }
-        if (filter.isEmpty()) {
-            System.out.print("No Transactions Found");
-        } else {
-            displayTransactionsMenu(filter);
-        }
+        displayFilteredTransaction(filter);
 
     }
 
@@ -123,9 +135,11 @@ public class Main {
         LocalDateTime dateTime = (option == 1) ? Console.promptForDateTime() : LocalDateTime.now();
 
         String description = Console.promptForString("Enter Description: ");
+        String formatDescription = Console.capitalizeFirstLetter(description);
         String vendor = Console.promptForString("Enter vendor: ");
+        String formatVendor = Console.capitalizeFirstOfEveryWord(vendor);
 
-        DataManager.addTransaction(dateTime, description, vendor, amountType);
+        DataManager.addTransaction(dateTime, formatDescription, formatVendor, amountType);
     }
 
     /**
@@ -210,12 +224,7 @@ public class Main {
             }
         }
 
-        if (customSearch.isEmpty()) {
-            System.out.print("No Transactions Found");
-
-        } else {
-            displayTransactionsMenu(customSearch);
-        }
+        displayFilteredTransaction(customSearch);
     }
     /**
      * Lets user search by vendor name.
@@ -230,11 +239,7 @@ public class Main {
 
             }
         }
-        if (filter.isEmpty()) {
-            System.out.print("No Transactions Found");
-        } else {
-            displayTransactionsMenu(filter);
-        }
+        displayFilteredTransaction(filter);
     }
 
     /**
@@ -253,11 +258,7 @@ public class Main {
                 filter.add(t);
             }
         }
-        if (filter.isEmpty()) {
-            System.out.print("No Transactions Found");
-        } else {
-            displayTransactionsMenu(filter);
-        }
+        displayFilteredTransaction(filter);
     }
 
     /**
@@ -274,19 +275,19 @@ public class Main {
             Year transactionYear = Year.from(t.getDateTime());
             if (year.equals(transactionYear)){
                 filter.add(t);
-
             }
         }
-
-        if (filter.isEmpty()) {
-            System.out.print("No Transactions Found");
-        } else {
-            displayTransactionsMenu(filter);
-        }
+        displayFilteredTransaction(filter);
     }
 
 
-
+    private static void displayFilteredTransaction(ArrayList<Transactions> transaction){
+        if (transaction.isEmpty()) {
+            System.out.print("No Transactions Found");
+        } else {
+            displayTransactionsMenu(transaction);
+        }
+    }
     private static int displayPage(int currentPage, ArrayList<Transactions> transaction){
         int previousTransactionsDisplayed = (currentPage * 10) - 10;
         int lastPage = (transaction.size() % 10 == 0 ) ?  transaction.size() / 10 : transaction.size() / 10 + 1;
