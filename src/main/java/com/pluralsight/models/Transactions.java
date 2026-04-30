@@ -22,12 +22,16 @@ public class Transactions {
     public double getAmount(){
         return amount;
     }
-
+    public void setAmount(double amount){
+        this.amount = amount;
+    }
     public LocalDateTime getDateTime(){
         return dateTime;
 
     }
-
+    public void setDateTime(LocalDateTime dateTime){
+        this.dateTime = dateTime;
+    }
     public LocalDate getDate(){
         return dateTime.toLocalDate();
     }
@@ -39,9 +43,15 @@ public class Transactions {
     public String getDescription(){
         return description;
     }
+    public void setDescription(String description){
+        this.description = description;
+    }
 
     public String getVendor(){
         return vendor;
+    }
+    public void setVendor(String vendor){
+        this.vendor = vendor;
     }
 
 

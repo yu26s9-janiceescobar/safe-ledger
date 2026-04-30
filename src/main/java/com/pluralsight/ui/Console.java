@@ -114,9 +114,8 @@ public class Console {
      * @param isMinAmount true if the custom filter is the minimum amount or false if it is the maximum amount filter.
      * @return double the amount used for the filter.
      */
-    public static double customAmount(String prompt, boolean isMinAmount){
+    public static double promptForCustomAmount(String prompt, boolean isMinAmount){
         double defaultAmount = isMinAmount ? MIN_AMOUNT : MAX_AMOUNT;
-
         while(true) {
             try {
                 String userInput = promptForString(prompt);

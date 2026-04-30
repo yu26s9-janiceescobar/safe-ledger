@@ -23,7 +23,7 @@ public class Main {
      */
     public static void main(String[] args) {
         System.out.printf("%35s %n","Welcome to Safe Ledger.");
-        String option = Console.promptForOptions("\t[S] Start Application [Q] Quit Application\n> ", "S", "Q");
+        String option = Console.promptForOptions("\t[S] START [Q] QUIT\n> ", "S", "Q");
         switch(option){
             case "S":
                 displayMainMenu();
@@ -135,8 +135,8 @@ public class Main {
         String transactionType = type == TransactionType.DEPOSIT ? "Deposit" : "Payment";
         System.out.println("\t\t" + transactionType + " Screen");
 
-        double parseAmount = Console.promptForAmount("Enter " + transactionType + " Amount: ");
-        double amountType = (type == TransactionType.DEPOSIT) ? parseAmount : -parseAmount;
+        double amount = Console.promptForAmount("Enter " + transactionType + " Amount: ");
+        double parseAmount = (type == TransactionType.DEPOSIT) ? amount : -amount;
 
         System.out.println("""
                     \t\tEnter an Option:
@@ -151,9 +151,76 @@ public class Main {
         String vendor = Console.promptForStringWithCharacterLimit("Enter vendor: ", VENDOR_MAX_CHARACTER_COUNT);
         String formatVendor = Console.capitalizeFirstOfEveryWord(vendor);
 
-        System.out.println("[Y] To Confirm " + transactionType + " [E] Edit [X] To Cancel");
 
-        DataManager.addTransaction(dateTime, formatDescription, formatVendor, amountType);
+        Transactions temp = new Transactions(dateTime, formatDescription, formatVendor, parseAmount);
+        System.out.print("[Y] To Confirm " + transactionType + " [E] Edit [X] To Cancel");
+        String options = Console.promptForOptions("> ", "Y","E","X");
+        switch(options){
+            case "Y":
+                DataManager.addTransaction(dateTime, formatDescription, formatVendor, parseAmount);
+                break;
+            case "E":
+                editTransaction(temp, type);
+                break;
+            case "X":
+                break;
+        }
+
+    }
+    private static void editTransaction(Transactions temp, TransactionType type){
+        System.out.println("""
+                What Would You Like to Edit?
+                [1] Date
+                [2] Time
+                [3] Description
+                [4] Vendor
+                [5] Amount""");
+
+        int option = Console.promptForInt("> ",1,5);
+        switch(option){
+            case 1:
+                while(true) {
+                    LocalDate date = Console.promptForDate("Enter New Date: ");
+                    LocalTime time = temp.getTime();
+                    LocalDateTime dateTime = LocalDateTime.of(date, time);
+                    if (dateTime.isAfter(LocalDateTime.now())){
+                        System.out.println("Error: Date cannot be in the future.");
+                    }
+                    else{
+                        temp.setDateTime(dateTime);
+                        break;
+                    }
+                }
+                break;
+            case 2:
+                while(true) {
+                    LocalTime time = Console.promptForTime("Enter New Time: ");
+                    LocalDate date = temp.getDate();
+                    LocalDateTime dateTime = LocalDateTime.of(date, time);
+                    if (dateTime.isAfter(LocalDateTime.now())){
+                        System.out.println("Error: Time cannot be in the future.");
+                    }
+                    else{
+                        temp.setDateTime(dateTime);
+                        break;
+                    }
+                }
+                break;
+            case 3:
+                String description = Console.promptForStringWithCharacterLimit("Enter New Description: ", DESCRIPTION_MAX_CHARACTER_COUNT);
+                temp.setDescription(description);
+                break;
+            case 4:
+                String vendor = Console.characterCountLimit("Enter New Vendor: ", VENDOR_MAX_CHARACTER_COUNT);
+                temp.setVendor(vendor);
+                break;
+            case 5:
+                double amount = Console.promptForAmount("Enter New Amount: ");
+                double parseAmount = (type == TransactionType.DEPOSIT) ? amount : -amount;
+                temp.setAmount(parseAmount);
+                break;
+        }
+
     }
 
     /**
@@ -213,8 +280,8 @@ public class Main {
         LocalDate endDateFilter = Console.promptCustomDate("Enter End Date: ", false).plusDays(1); //Includes date the user entered.
         String descriptionFilter = Console.promptForStringWithCharacterLimit("Enter Description: ", DESCRIPTION_MAX_CHARACTER_COUNT).toLowerCase();
         String vendorFilter = Console.promptForStringWithCharacterLimit("Enter Vendor: ", VENDOR_MAX_CHARACTER_COUNT).toLowerCase();
-        double parseMinFilter = Console.customAmount("Enter Minimum Amount: ", true);
-        double parseMaxFilter = Console.customAmount("Enter Maximum Amount: ", false);
+        double parseMinFilter = Console.promptForCustomAmount("Enter Minimum Amount: ", true);
+        double parseMaxFilter = Console.promptForCustomAmount("Enter Maximum Amount: ", false);
 
 
         for (Transactions t: transaction){
