@@ -133,10 +133,10 @@ public class Main {
                     System.out.println("Loading Ledger Menu...");
                     break;
                 case 1:
-                    displayMonthToDate();
+                    displayMonthReport("Month to Date Report", true);
                     break;
                 case 2:
-                    displayPreviousMonth();
+                    displayMonthReport("Previous Month Report", false);
                     break;
                 case 3:
                     displayYearToDate();
@@ -163,8 +163,8 @@ public class Main {
         System.out.println("\t\tCustom Search Filter");
         System.out.println("Press ENTER to skip field");
 
-        LocalDate startDate = Console.promptCustomDate("Enter Start Date: ", true);
-        LocalDate endDate = Console.promptCustomDate("Enter End Date: ", false);
+        LocalDate startDate = Console.promptCustomDate("Enter Start Date: ", true).minusDays(1);
+        LocalDate endDate = Console.promptCustomDate("Enter End Date: ", false).plusDays(1);//Includes date the user entered.
         String description = Console.promptForString("Enter Description: ").toLowerCase();
         String vendor = Console.promptForString("Enter Vendor: ").toLowerCase();
         double parseMin = Console.customAmount("Enter Minimum Amount: ", true);
@@ -199,28 +199,30 @@ public class Main {
      * Lets user search by vendor name.
      */
     private static void searchByVendor(){
+        ArrayList<Transactions> transactions = new ArrayList<>();
         String vendor = Console.promptForString("Enter Vendor: ").toLowerCase();
         boolean isFound = false;
         for (Transactions t: transaction){
             if (t.getVendor().toLowerCase().contains(vendor)){
-                System.out.println(t);
+                transactions.add(t);
                 isFound = true;
             }
         }
         if (!isFound){
             System.out.println("No Matching Vendors.");
         }
+        displayTransactions(transactions);
     }
     /**
-     * Displays Month to date transactions to user.
+     * Displays Month to date or prior month transactions to user.
      */
-    private static void displayMonthToDate(){
-        System.out.printf("%70s", "Month to Date Report");
+    private static void displayMonthReport(String prompt, boolean isCurrentMonth){
+        System.out.printf("%70s %n", prompt);
         transactionHeader();
-        YearMonth currentYearMonth = YearMonth.now();
+        YearMonth filter = isCurrentMonth ? YearMonth.now() : YearMonth.now().minusMonths(1);
         for (Transactions t: transaction){
             YearMonth transactionMonth = YearMonth.from(t.getDateTime());
-            if (currentYearMonth.equals(transactionMonth)){
+            if (filter.equals(transactionMonth)){
                 System.out.println(t);
             }
         }
@@ -256,20 +258,6 @@ public class Main {
         }
     }
 
-    /**
-     * Displays previous month transactions to user.
-     */
-    private static void displayPreviousMonth(){
-        System.out.printf("%70s", "Previous Month Report");
-        transactionHeader();
-        YearMonth priorMonth = YearMonth.now().minusMonths(1);
-        for (Transactions t: transaction){
-            YearMonth transactionMonth = YearMonth.from(t.getDateTime());
-            if (transactionMonth.equals(priorMonth)){
-                System.out.println(t);
-            }
-        }
-    }
 
     /**
      * Displays transactions to user.
