@@ -139,10 +139,10 @@ public class Main {
                     displayMonthReport("Previous Month Report", false);
                     break;
                 case 3:
-                    displayYearToDate();
+                    displayYearReport("Current Year Report", true);
                     break;
                 case 4:
-                    displayPriorYear();
+                    displayYearReport("Prior Year Report", false);
                     break;
                 case 5:
                     searchByVendor();
@@ -163,8 +163,8 @@ public class Main {
         System.out.println("\t\tCustom Search Filter");
         System.out.println("Press ENTER to skip field");
 
-        LocalDate startDate = Console.promptCustomDate("Enter Start Date: ", true).minusDays(1);
-        LocalDate endDate = Console.promptCustomDate("Enter End Date: ", false).plusDays(1);//Includes date the user entered.
+        LocalDate startDate = Console.promptCustomDate("Enter Start Date: ", true).minusDays(1); // true if start date filter, false if end date.
+        LocalDate endDate = Console.promptCustomDate("Enter End Date: ", false).plusDays(1); //Includes date the user entered.
         String description = Console.promptForString("Enter Description: ").toLowerCase();
         String vendor = Console.promptForString("Enter Vendor: ").toLowerCase();
         double parseMin = Console.customAmount("Enter Minimum Amount: ", true);
@@ -213,8 +213,11 @@ public class Main {
         }
         displayTransactions(transactions);
     }
+
     /**
-     * Displays Month to date or prior month transactions to user.
+     * Displays current or prior month transactions.
+     * @param prompt the header title displayed to the user.
+     * @param isCurrentMonth if true, the month will be set to current month, if false, it will be set to prior month.
      */
     private static void displayMonthReport(String prompt, boolean isCurrentMonth){
         System.out.printf("%70s %n", prompt);
@@ -228,31 +231,19 @@ public class Main {
         }
     }
 
-    /**
-     * Displays Year to date transactions to user.
-     */
-    private static void displayYearToDate(){
-        System.out.printf("%70s %n", "Year to Date Report");
-        transactionHeader();
-        Year currentYear = Year.now();
-        for (Transactions t: transaction){
-            Year transactionYear = Year.from(t.getDateTime());
-            if (currentYear.equals(transactionYear)) {
-                System.out.println(t);
-            }
-        }
-    }
 
     /**
-     * Displays transactions dated from last year.
+     * Displays Current or Prior Year transactions.
+     * @param prompt the header title displayed to the user.
+     * @param isCurrentYear if true, year will be set to current year, if false, year will be set to prior year.
      */
-    private static void displayPriorYear(){
-        System.out.printf("%70s %n", "Last Year Report");
+    private static void displayYearReport(String prompt, boolean isCurrentYear){
+        System.out.printf("%70s %n", prompt);
         transactionHeader();
-        Year priorYear = Year.now().minusYears(1);
+        Year year = isCurrentYear ? Year.now() : Year.now().minusYears(1);
         for (Transactions t: transaction){
-            Year transactionYear = Year.from(t.getDateTime()); // Returns yyyy
-            if (priorYear.equals(transactionYear)){
+            Year transactionYear = Year.from(t.getDateTime());
+            if (year.equals(transactionYear)){
                 System.out.println(t);
             }
         }
