@@ -66,11 +66,11 @@ public class DataManager {
             line = String.format("%s|%s|%s|%s|%.2f%n", t.getDate(), t.getTime(), description, vendor, amount);
             bufWriter.write(line);
             bufWriter.close();
+            transactions.add(t); // Will not add to arrayList if IOException is thrown.
         }catch (IOException e){
             System.out.println("Error: " + e.getMessage());
         }
 
-        transactions.add(t);
         transactions.sort((t1, t2)->t2.getDateTime().compareTo(t1.getDateTime()));
 
     }

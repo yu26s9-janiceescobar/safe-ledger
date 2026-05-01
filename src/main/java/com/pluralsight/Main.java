@@ -210,7 +210,7 @@ public class Main {
                     break;
                 case 2:
                     while (true) {
-                        LocalTime time = Console.promptForTime("Enter time (24:00): ");
+                        LocalTime time = Console.promptForTime("Enter New Time (24:00): ");
                         LocalDateTime newDateTime = LocalDateTime.of(temp.getDate(), time);
 
                         if (newDateTime.isAfter(LocalDateTime.now())) {
@@ -412,7 +412,6 @@ public class Main {
     private static int displayPage(int currentPage, String header, ArrayList<Transactions> transaction){
         int previousTransactionsDisplayed = (currentPage * 10) - 10;
         int lastPage = (transaction.size() % 10 == 0 ) ?  transaction.size() / 10 : transaction.size() / 10 + 1;
-        int transactionsLeft = transaction.size() - previousTransactionsDisplayed;
         if (currentPage < 1){
             System.out.println("You are on the first page.");
             return currentPage + 1;
@@ -426,12 +425,8 @@ public class Main {
         System.out.printf("%81s %n%-20s %-20s %-45s %-35s %s %n", header, "DATE", "TIME", "DESCRIPTION", "VENDOR", "AMOUNT");
 
         System.out.println("=".repeat(145));
-        for (int i = previousTransactionsDisplayed; i < previousTransactionsDisplayed + 10 ; i++){
+        for (int i = previousTransactionsDisplayed; i< transaction.size() && i < previousTransactionsDisplayed + 10 ; i++){
             System.out.println(transaction.get(i));
-            transactionsLeft--;
-            if (transactionsLeft == 0){
-                return lastPage;
-            }
         }
         return currentPage;
     }
@@ -469,7 +464,3 @@ public class Main {
 
 
 }
-
-
-
-
