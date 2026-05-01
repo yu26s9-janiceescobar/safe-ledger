@@ -9,6 +9,7 @@ public class Main {
     private static final ArrayList<Transactions> transaction = DataManager.loadTransactions();
     private static final int DESCRIPTION_MAX_CHARACTER_COUNT = 35;
     private static final int VENDOR_MAX_CHARACTER_COUNT = 25;
+
     private enum TransactionType {
         DEPOSIT, PAYMENT
     }
@@ -33,6 +34,7 @@ public class Main {
                 break;
         }
     }
+
 
     /**
      * Displays Main Menu and prompts user to select an option including
@@ -146,10 +148,11 @@ public class Main {
         int option = Console.promptForInt("> ", 1, 2);
         LocalDateTime dateTime = (option == 1) ? Console.promptForDateTime() : LocalDateTime.now();
 
-        String description = Console.promptForStringWithCharacterLimit("Enter Description: ", DESCRIPTION_MAX_CHARACTER_COUNT);
+        String description = Console.promptForStringWithCharacterLimit("Enter Description: ", 1, DESCRIPTION_MAX_CHARACTER_COUNT);
         String formatDescription = Console.capitalizeFirstLetter(description);
-        String vendor = Console.promptForStringWithCharacterLimit("Enter vendor: ", VENDOR_MAX_CHARACTER_COUNT);
+        String vendor = Console.promptForStringWithCharacterLimit("Enter vendor: ", 1, VENDOR_MAX_CHARACTER_COUNT);
         String formatVendor = Console.capitalizeFirstOfEveryWord(vendor);
+
 
 
         Transactions temp = new Transactions(dateTime, formatDescription, formatVendor, parseAmount);
@@ -160,17 +163,24 @@ public class Main {
 
             switch (options) {
                 case "Y":
+                    DataManager.addTransaction(temp.getDateTime(), temp.getDescription(), temp.getVendor(), temp.getAmount());
                     break;
                 case "E":
-                    temp = editTransaction(temp, type);
+                    temp = editTransaction(temp, type); // temp gets reassigned and updates.
                     break;
                 case "X":
+                    System.out.println("Transaction Cancelled.");
                     break;
             }
         }while(options.equals("E"));
-        DataManager.addTransaction(temp.getDateTime(), temp.getDescription(), temp.getVendor(), temp.getAmount());
-
     }
+
+    /**
+     * User can edit transaction information before confirming transaction.
+     * @param temp temporary transaction object.
+     * @param type the type of transaction deposit or payment.
+     * @return transactions the transaction information.
+     */
     private static Transactions editTransaction(Transactions temp, TransactionType type){
         int option;
         do {
@@ -190,7 +200,7 @@ public class Main {
                         LocalDate date = Console.promptForDate("Enter New Date: ");
                         LocalDateTime newDateTime = LocalDateTime.of(date, temp.getTime());
 
-                        if (newDateTime.isAfter(LocalDateTime.now())) {
+                        if (newDateTime.isAfter(LocalDateTime.now())) { // checks before changing object.
                             System.out.println("Error: Date cannot be in the future.");
                         } else {
                             temp.setDateTime(newDateTime);
@@ -200,7 +210,7 @@ public class Main {
                     break;
                 case 2:
                     while (true) {
-                        LocalTime time = Console.promptForTime("Enter New Time: ");
+                        LocalTime time = Console.promptForTime("Enter time (24:00): ");
                         LocalDateTime newDateTime = LocalDateTime.of(temp.getDate(), time);
 
                         if (newDateTime.isAfter(LocalDateTime.now())) {
@@ -212,12 +222,12 @@ public class Main {
                     }
                     break;
                 case 3:
-                    String description = Console.promptForStringWithCharacterLimit("Enter New Description: ", DESCRIPTION_MAX_CHARACTER_COUNT);
+                    String description = Console.promptForStringWithCharacterLimit("Enter New Description: ", 1, DESCRIPTION_MAX_CHARACTER_COUNT);
                     String formatDescription = Console.capitalizeFirstLetter(description);
                     temp.setDescription(formatDescription);
                     break;
                 case 4:
-                    String vendor = Console.promptForStringWithCharacterLimit("Enter New Vendor: ", VENDOR_MAX_CHARACTER_COUNT);
+                    String vendor = Console.promptForStringWithCharacterLimit("Enter New Vendor: ", 1, VENDOR_MAX_CHARACTER_COUNT);
                     String formatVendor = Console.capitalizeFirstOfEveryWord(vendor);
                     temp.setVendor(formatVendor);
                     break;
@@ -285,10 +295,19 @@ public class Main {
         System.out.println("\t\tCustom Search Filter");
         System.out.println("Leave Blank to Skip Field.");
 
-        LocalDate startDateFilter = Console.promptCustomDate("Enter Start Date: ", true).minusDays(1); // true if start date filter, false if end date.
-        LocalDate endDateFilter = Console.promptCustomDate("Enter End Date: ", false).plusDays(1); //Includes date the user entered.
-        String descriptionFilter = Console.promptForStringWithCharacterLimit("Enter Description: ", DESCRIPTION_MAX_CHARACTER_COUNT).toLowerCase();
-        String vendorFilter = Console.promptForStringWithCharacterLimit("Enter Vendor: ", VENDOR_MAX_CHARACTER_COUNT).toLowerCase();
+        LocalDate startDate = Console.promptCustomDate("Enter Start Date (YYYY-MM-DD): ", true); // true if start date filter, false if end date.
+        LocalDate endDate;
+        do {
+            endDate = Console.promptCustomDate("Enter End Date (YYYY-MM-DD): ", false);
+
+            if (startDate.isAfter(endDate)){
+                System.out.println("Error: Start Date Cannot Be After End Date.");
+            }
+        }
+        while (startDate.isAfter(endDate));
+
+        String descriptionFilter = Console.promptForStringWithCharacterLimit("Enter Description: ", 0, DESCRIPTION_MAX_CHARACTER_COUNT).toLowerCase();
+        String vendorFilter = Console.promptForStringWithCharacterLimit("Enter Vendor: ", 0, VENDOR_MAX_CHARACTER_COUNT).toLowerCase();
         double parseMinFilter = Console.promptForCustomAmount("Enter Minimum Amount: ", true);
         double parseMaxFilter = Console.promptForCustomAmount("Enter Maximum Amount: ", false);
 
@@ -301,8 +320,8 @@ public class Main {
             double transactionAmount = Math.abs(t.getAmount()); // For negative transaction amounts.
 
 
-            if (transactionDate.isAfter(startDateFilter) &&
-            transactionDate.isBefore(endDateFilter) &&
+            if (transactionDate.isAfter(startDate) &&
+            transactionDate.isBefore(endDate) &&
                     transactionDescription.contains(descriptionFilter) &&
             transactionVendor.contains(vendorFilter) &&
                     transactionAmount >= parseMinFilter &&
@@ -321,14 +340,19 @@ public class Main {
     private static void searchByVendor(){
         ArrayList<Transactions> filter = new ArrayList<>();
         String vendor = Console.promptForString("Enter Vendor: ").toLowerCase();
-
-        for (Transactions t: transaction){
-            if (t.getVendor().toLowerCase().contains(vendor)){
-                filter.add(t);
-
-            }
+        if (vendor.isBlank()){
+            System.out.println("No Matches Found.");
         }
-        transactionExists("VENDOR: " + vendor.toUpperCase(), filter);
+        else {
+            for (Transactions t : transaction) {
+                if (t.getVendor().toLowerCase().contains(vendor)) {
+                    filter.add(t);
+
+                }
+            }
+            transactionExists("VENDOR: " + vendor.toUpperCase(), filter);
+        }
+
     }
 
     /**

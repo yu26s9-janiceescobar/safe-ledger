@@ -3,7 +3,6 @@ import com.pluralsight.models.Transactions;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
@@ -46,6 +45,7 @@ public class DataManager {
         catch (IOException e){
             System.out.println("Error: " + e.getMessage());
         }
+        transactions.sort((t1, t2)->t2.getDateTime().compareTo(t1.getDateTime())); // Sorts transactions by newest transaction to oldest transaction.
         return transactions;
     }
 
@@ -59,9 +59,6 @@ public class DataManager {
     public static void addTransaction(LocalDateTime dateTime, String description, String vendor, double amount){
         Transactions t = new Transactions(dateTime, description, vendor, amount);
 
-        DateTimeFormatter dateFormat =  DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Takes the date part of the DateTime object
-        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss"); // Takes the time part of the DateTime object.
-
         try {
             String line;
             FileWriter fileWriter = new FileWriter(transactionFile, true);
@@ -69,10 +66,13 @@ public class DataManager {
             line = String.format("%s|%s|%s|%s|%.2f%n", t.getDate(), t.getTime(), description, vendor, amount);
             bufWriter.write(line);
             bufWriter.close();
-            transactions.add(t);
         }catch (IOException e){
             System.out.println("Error: " + e.getMessage());
         }
+
+        transactions.add(t);
+        transactions.sort((t1, t2)->t2.getDateTime().compareTo(t1.getDateTime()));
+
     }
 
 

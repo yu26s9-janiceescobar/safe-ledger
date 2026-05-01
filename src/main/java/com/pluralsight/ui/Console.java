@@ -22,22 +22,37 @@ public class Console {
         return userInput.replaceAll("\\s+"," ");
     }
 
-    public static String promptForStringWithCharacterLimit(String prompt, int characterCount){
+    /**
+     * Prompts user to enter an input with a minimum and maximum character limit.
+     * @param prompt the message displayed to the user.
+     * @param minCharacterCount the minimum characters allowed to be in input.
+     * @param maxCharacterCount the maximum characters allowed to be in input.
+     * @return String the user entered.
+     */
+    public static String promptForStringWithCharacterLimit(String prompt, int minCharacterCount, int maxCharacterCount){
         while(true){
             String input = promptForString(prompt);
             try{
-                return characterCountLimit(input, characterCount);
+                return characterCountLimit(input, minCharacterCount, maxCharacterCount);
             }catch(IllegalArgumentException e){
                 System.out.println(e.getMessage());
             }
         }
     }
-    public static String characterCountLimit(String input, int characterCount){
-        if (characterCount == 0){
-            throw new RuntimeException("Error: Character Count Cannot be Set to 0.");
+
+    /**
+     * Checks if user input is between minimum and maximum character count.
+     * @param input the string the user entered.
+     * @param minCharacterCount the minimum characters allowed to be in input.
+     * @param maxCharacterCount the maximum characters allowed to be in input.
+     * @return String the user entered.
+     */
+    public static String characterCountLimit(String input, int minCharacterCount, int maxCharacterCount){
+        if (input.length() < minCharacterCount){
+            throw new IllegalArgumentException("Error: Character Count Cannot be less than " + minCharacterCount);
         }
-        if (input.length() > characterCount){
-            throw new IllegalArgumentException("Error: Character Count Cannot Exceed " + characterCount);
+        if (input.length() > maxCharacterCount){
+            throw new IllegalArgumentException("Error: Character Count Cannot Exceed " + maxCharacterCount);
         }
         return input;
     }
@@ -48,6 +63,9 @@ public class Console {
      * @return String the string with the first letter of the word capitalized.
      */
     public static String capitalizeFirstLetter(String input){
+        if (input.isEmpty()){
+            throw new IllegalArgumentException("Error: Input cannot be empty.");
+        }
         return input.substring(0,1).toUpperCase() + input.substring(1);
     }
 
@@ -92,11 +110,11 @@ public class Console {
                 double parseAmount = Double.parseDouble(amountInput);
 
                 if (parseAmount < MIN_AMOUNT || parseAmount > MAX_AMOUNT ){
-                    throw new IllegalArgumentException("Error: Amount has to be between $0.01 and $999,999,999.99");
+                    throw new IllegalArgumentException(String.format("Error: Amount must be between $%.2f and $%.2f", MIN_AMOUNT, MAX_AMOUNT));
                 }
                 if (amountInput.contains(".")){
                     String[] decimalPlaces = amountInput.split("\\.");
-                    if (decimalPlaces.length != 1) {
+                    if (decimalPlaces.length > 1) {
                         if (decimalPlaces[1].length() > 2) {
                             throw new IllegalArgumentException("Error: Amount cannot be more than two decimal places.");
                         }
@@ -231,34 +249,28 @@ public class Console {
         }
     }
 
-    /**
-     * Checks user custom date input, if blank it will set default start (1970-01-01) or end date(today's date).
-     * @param input the date the user entered.
-     * @param isStartDate if the user input is filter for the start date or end date.
-     * @return LocalDate the date the user entered or the default date if left blank.
-     */
-    public static LocalDate parseCustomDate(String input, boolean isStartDate){
-        LocalDate defaultDate = isStartDate ? MIN_DATE : LocalDate.now();
-        return input.isBlank() ? defaultDate : parseDate(input);
-    }
 
     /**
      * Prompts the user for a custom filter date, either start or end date.
-     * @param prompt the message displayed to the user.
-     * @param isStartDate if the date entered is the start or end date for custom date filter.
      * @return LocalDate the date the user entered or a default date if left blank.
      */
     public static LocalDate promptCustomDate(String prompt, boolean isStartDate){
         while(true){
+            LocalDate defaultDate = isStartDate ? MIN_DATE : LocalDate.now();
             try {
-                String date = Console.promptForString(prompt);
-                return parseCustomDate(date, isStartDate);
+                String date = promptForString(prompt);
+                if (date.isBlank()) {
+                    return defaultDate;
+                } else {
+                    return isStartDate ? parseDate(date).minusDays(1) : parseDate(date).plusDays(1); // Makes 1970-01-01 and today's date inclusive.
+                }
             }catch(IllegalArgumentException e){
                 System.out.println(e.getMessage());
             }
         }
 
     }
+
 
     /**
      * Prompts user for an integer between a given range.
@@ -278,7 +290,7 @@ public class Console {
                 }
                 System.out.println("Please enter an option between " + min + "-" + max);
             }catch(NumberFormatException e){
-                System.out.println("Error: Invalid Number. Please Try Again!");
+                System.out.println("Error: Invalid Character. Please Try Again!");
             }
         }
     }

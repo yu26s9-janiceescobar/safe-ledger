@@ -3,14 +3,23 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
+/**
+ * Creates a transaction including information of date, time, description, vendor, and amount.
+ */
 public class Transactions {
     private LocalDateTime dateTime;
     private String description;
     private String vendor;
     private double amount;
 
+    /**
+     * Creates Transaction with information about the transaction.
+     * @param dateTime the date and time of transaction.
+     * @param description the description of the transaction.
+     * @param vendor the vendor of transaction.
+     * @param amount the amount of the transaction.
+     */
     public Transactions(LocalDateTime dateTime, String description, String vendor, double amount){
         this.dateTime = dateTime;
         this.description = description;
@@ -36,12 +45,6 @@ public class Transactions {
     public LocalDate getDate(){
         return dateTime.toLocalDate();
     }
-    public LocalDateTime setTime(LocalTime time){
-        return time.atDate(dateTime.toLocalDate());
-    }
-    public LocalDateTime setDate(LocalDate date){
-        return date.atTime(dateTime.toLocalTime());
-    }
 
     public LocalTime getTime(){
         return dateTime.toLocalTime();
@@ -61,11 +64,14 @@ public class Transactions {
         this.vendor = vendor;
     }
 
-
+    /**
+     * The date, time, description, vendor, and amount of transaction in a formatted string.
+     * @return String of transaction information.
+     */
     @Override
     public String toString(){
         DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm:ss");
-        return String.format("%-20s %-20s %-45s %-35s $%,.2f", this.getDate(), this.getTime(), description, vendor, amount);
+        return String.format("%-20s %-20s %-45s %-35s $%,.2f", this.getDate().format(dateFmt), this.getTime().format(timeFmt), description, vendor, amount);
     }
 }

@@ -1,23 +1,22 @@
 date|time|description|vendor|amount
-2023-06-15|09:30:40|Retail order - sunscreen|Shopify Store|39.99
-2023-06-18|12:10:38|Invoice 3008 paid - spa order|Glow Beauty Spa|2100.00
-2023-06-22|14:40:00|Bulk inventory purchase|DermSupply Co|-1100.00
-2023-07-06|11:35:01|Retail order - moisturizer|Shopify Store|45.99
-2023-07-09|13:20:00|Wholesale order - acne kits|SkinCare Distributors|-1350.00
-2024-08-05|11:30:00|Payroll|Internal Payroll|-800.00
-2024-08-08|13:00:00|Wholesale order - sunscreen|BeautyWarehouse Inc|-980.40
-2025-09-28|09:45:00|Invoice 3013 paid - spa order|Glow Beauty Spa|2100.00
-2025-10-03|14:05:20|Retail order - cleanser set|Amazon|55.00
-2025-10-06|18:25:00|Payroll - staff|Internal Payroll|-500.00
-2025-10-18|12:20:00|Utility bill|City Utilities|-210.00
-2026-10-22|14:05:40|Wholesale order - toner bulk|DermSupply Co|1200.00
-2026-03-03|09:30:06|Invoice 3015 paid - spa supply|Luxe Skin Spa|1950.00
-2026-03-06|11:50:01|Payroll - consultant|Internal Payroll|-850.00
-2026-03-09|13:10:00|Retail order - moisturizer|Shopify Store|45.99
-2026-03-12|15:30:00|Wholesale order - facial kits|Skincare Distributors|-1350.00
-2026-04-01|07:34:10|Retail order - vitamin c serum|Amazon|-5000.00
-2026-04-09|02:50:54|Invoice 3019 - spa order|Luxe Skin Spa|3000.00
-2026-04-30|12:36:14|Wholesale order - face mask|Skincare Distributors|-800.00
-2025-04-30|13:06:00|Skin care order|Wholesale Supplier|150.00
-2026-04-30|12:00:00|Shampoo and conditioner|Haircare Supplier|-500.54
-2020-01-01|12:00|Joyce|Joyce|100.00
+2024-04-02|09:00:33|Retail order - vitamin C serum|Shopify Store|85.50
+2024-05-20|14:20:18|Bulk retinol restock|BeautyWarehouse Inc|-890.25
+2024-06-15|09:30:52|Invoice 1002 - spa supply|Luxe Skin Spa|2400.00
+2024-07-04|12:00:05|Retail order - sunscreen SPF50|Amazon|39.99
+2024-08-10|15:40:27|Payroll - skincare technician|Internal Payroll|-800.00
+2024-09-22|10:10:44|Wholesale order - acne kits|SkinCare Distributors|-1350.00
+2024-10-15|11:00:16|Invoice 1003 - spa restock|Glow Beauty Spa|2100.00
+2024-12-20|14:45:29|Retail order - glow kit|Shopify Store|88.00
+2025-01-10|09:50:11|Invoice 1004 - spa order|Luxe Skin Spa|1950.00
+2025-02-14|10:30:55|Valentines promo - brightening set|Shopify Store|275.00
+2025-03-05|12:10:42|Bulk facial oils purchase|DermSupply Co|-780.00
+2025-04-18|09:00:18|Invoice 1005 - spa wholesale|Glow Beauty Spa|2200.00
+2025-05-22|11:30:33|Retail order - anti-aging serum|Shopify Store|95.00
+2025-06-30|13:15:07|Utility bill - electricity|City Utilities|-220.75
+2026-01-15|15:45:22|Wholesale order - toner bulk|SkinCare Distributors|-1200.00
+2026-01-28|10:00:49|Invoice 1006 - spa supply|Luxe Skin Spa|2300.00
+2026-03-05|11:20:14|Payroll - consultant|Internal Payroll|-850.00
+2026-04-20|13:00:36|Retail order - face serum|Shopify Store|95.00
+2026-04-26|14:30:51|Business insurance payment|Allied Insurance|-320.00
+2026-05-01|04:40:27|Invoice 1007 - spa wholesale order|Glow Beauty Spa|2500.00
+2026-05-01|08:10:43|Bulk cleanser restock|DermSupply Co|-1100.00
